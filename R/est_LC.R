@@ -4,7 +4,7 @@ est_LC <- function (Y, yv, k, tol = 1e-8, maxit = 1e3, sv = NULL, algorithm = c(
   
   # Starting Values
   if (is.null(sv)) {
-    sv <- LC_sv(S = Y, k = k)
+    sv <- LC_sv(Y = Y, k = k)
   }
   
   # EM/TEM/EEM algorithms
