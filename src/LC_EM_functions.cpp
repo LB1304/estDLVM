@@ -241,9 +241,7 @@ Rcpp::List LC_tem(arma::mat Y, arma::colvec yv, int k, double tol, int maxit, ar
                             Rcpp::Named("k") = k,
                             Rcpp::Named("np") = np,
                             Rcpp::Named("aic") = aic,
-                            Rcpp::Named("bic") = bic,
-                            Rcpp::Named("profile") = profile,
-                            Rcpp::Named("profile_pars") = profile_pars);
+                            Rcpp::Named("bic") = bic);
 }
 
 
