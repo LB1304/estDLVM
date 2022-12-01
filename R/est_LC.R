@@ -20,6 +20,7 @@ est_LC <- function (Y, yv, k, tol = 1e-8, maxit = 1e3, sv = NULL, algorithm = c(
     }
     out <- LC_tem(Y = Y, yv = yv, k = k, tol = tol, maxit = maxit, piv = sv$piv, Piv = sv$Piv, Psi = sv$Psi, Phi = sv$Phi,
                   profile = profile, profile_pars = profile_pars)
+    out$temperingOptions <- temperingOptions
   } else if (algorithm == "EEM") {
     evolutionaryOptions[sapply(evolutionaryOptions, is.null)] <- NULL
     if (length(evolutionaryOptions) != 4) {
@@ -32,6 +33,7 @@ est_LC <- function (Y, yv, k, tol = 1e-8, maxit = 1e3, sv = NULL, algorithm = c(
     }
     out <- LC_eem(Y = Y, yv = yv, k = k, tol = tol, maxit = maxit, 
                   n_parents = n_parents, n_children = n_children, prob_mut = prob_mut, R = R)
+    out$evolutionaryOptions <- evolutionaryOptions
   } else {
     stop("Specify an available algorithm.")
   }
