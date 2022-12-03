@@ -482,7 +482,7 @@ Rcpp::List Selection_step_C (Rcpp::List PV_p, Rcpp::List PV_c, arma::rowvec fit_
     fit[n_parents + i] = fit_c[i];
   }
   
-  arma::uvec indeces = arma::sort_index(fit, "descend");
+  arma::uvec indeces = arma::sort_index(fit.replace(arma::datum::nan, R_NegInf), "descend");
   
   Rcpp::List PV_new(n_parents);
   arma::rowvec fit_new(n_parents);
