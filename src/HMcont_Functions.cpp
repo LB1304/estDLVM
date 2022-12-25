@@ -131,7 +131,7 @@ bool HMcont_CheckConvergence (double lk, double lk_old, arma::rowvec piv, arma::
   bool lk_conv = (abs(lk - lk_old)/abs(lk_old) < tol_lk);
   bool theta_conv = (arma::max(arma::abs(theta - theta_old)) < tol_theta);
   bool maxit_reached = (it > maxit-1);
-  bool minit_done = (it > 0);
+  bool minit_done = (it > 2);
 
   bool alt = (maxit_reached + (theta_conv && lk_conv)) && minit_done;
 
