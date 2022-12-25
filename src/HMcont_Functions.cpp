@@ -385,6 +385,7 @@ Rcpp::List HMcont_TEM(arma::cube S, int k, double tol_lk, double tol_theta, int 
   int r = S.n_slices;
   arma::mat Sv = arma::reshape(arma::mat(S.memptr(), S.n_elem, 1, false), n*TT, r);
   arma::cube V(n, k, TT);
+  Rcout << "Fatto passo preliminare\n";
   
   while (!alt) {
     double temp = HMcont_Temperature(it+1, profile, profile_pars);
@@ -393,25 +394,24 @@ Rcpp::List HMcont_TEM(arma::cube S, int k, double tol_lk, double tol_theta, int 
     Rcpp::List tM_list = HMcont_M_step(Sv, n, r, TT, k, tE_list, modBasic);
     Rcpp::NumericMatrix piv_aux = tM_list["piv"];
     piv = arma::rowvec(piv_aux.begin(), piv_aux.length(), false);
-    
     Rcpp::NumericVector Pi_aux = tM_list["Pi"];
     Pi = arma::cube(Pi_aux.begin(), k, k, TT, false);
-    
     Rcpp::NumericMatrix Mu_aux = tM_list["Mu"];
     Mu = arma::mat(Mu_aux.begin(), r, k, false);
-    
     Rcpp::NumericMatrix Si_aux = tM_list["Si"];
     Si = arma::mat(Si_aux.begin(), r, r, false);
-    
     Rcpp::NumericVector V_aux = tE_list["V"];
     V = arma::cube(V_aux.begin(), n, k, TT, false);
+    Rcout << "Fatti E and M step\n";
   
     lk_old = lk;
     llk_list = HMcont_ComputeLogLik(S, piv, Pi, Mu, Si);
     lk = llk_list["LogLik"];
+    Rcout << "N. Iter: " << it << " - LogLik: " << lk << "\n";
     lkv(it) = lk;
     it++;
     alt = HMcont_CheckConvergence(lk, lk_old, piv, Pi, Mu, Si, piv_old, Pi_old, Mu_old, Si_old, it, tol_lk, tol_theta, maxit);
+    Rcout << "Finito passo ciclo";
   }
 
   Rcpp::List E_list = HMcont_E_step(n, TT, k, llk_list, Pi);
