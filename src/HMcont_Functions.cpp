@@ -314,6 +314,7 @@ Rcpp::List HMcont_EM(arma::cube S, int k, double tol_lk, double tol_theta, int m
   int r = S.n_slices;
   arma::mat Sv = arma::reshape(arma::mat(S.memptr(), S.n_elem, 1, false), n*TT, r);
   arma::cube V(n, k, TT);
+  Rcout << "Fatto passo preliminare\n";
 
   while (!alt) {
     piv_old = piv; Pi_old = Pi; Mu_old = Mu; Si_old = Si;
@@ -329,6 +330,7 @@ Rcpp::List HMcont_EM(arma::cube S, int k, double tol_lk, double tol_theta, int m
     Si = arma::mat(Si_aux.begin(), r, r, false);
     Rcpp::NumericVector V_aux = E_list["V"];
     V = arma::cube(V_aux.begin(), n, k, TT, false);
+    Rcout << "Fatti E and M step\n";
     
     lk_old = lk;
     llk_list = HMcont_ComputeLogLik(S, piv, Pi, Mu, Si);
