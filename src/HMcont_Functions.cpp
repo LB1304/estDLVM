@@ -131,7 +131,7 @@ bool HMcont_CheckConvergence (double lk, double lk_old, arma::rowvec piv, arma::
   bool lk_conv = (abs(lk - lk_old)/abs(lk_old) < tol_lk);
   bool theta_conv = (arma::max(arma::abs(theta - theta_old)) < tol_theta);
   bool maxit_reached = (it > maxit-1);
-  bool minit_done = (it > 2);
+//  bool minit_done = (it > 2);
 
   bool alt = (maxit_reached + (theta_conv && lk_conv)) && minit_done;
 
@@ -339,6 +339,7 @@ Rcpp::List HMcont_EM(arma::cube S, int k, double tol_lk, double tol_theta, int m
     lkv(it) = lk;
     it++;
     alt = HMcont_CheckConvergence(lk, lk_old, piv, Pi, Mu, Si, piv_old, Pi_old, Mu_old, Si_old, it, tol_lk, tol_theta, maxit);
+    Rcout << "Finito passo ciclo";
   }
   
   int np = (k - 1) + k * r + r * (r + 1)/2;
