@@ -314,7 +314,6 @@ Rcpp::List HMcont_EM(arma::cube S, int k, double tol_lk, double tol_theta, int m
   int r = S.n_slices;
   arma::mat Sv = arma::reshape(arma::mat(S.memptr(), S.n_elem, 1, false), n*TT, r);
   arma::cube V(n, k, TT);
-  Rcout << "Fatto passo preliminare\n";
 
   while (!alt) {
     piv_old = piv; Pi_old = Pi; Mu_old = Mu; Si_old = Si;
@@ -330,16 +329,13 @@ Rcpp::List HMcont_EM(arma::cube S, int k, double tol_lk, double tol_theta, int m
     Si = arma::mat(Si_aux.begin(), r, r, false);
     Rcpp::NumericVector V_aux = E_list["V"];
     V = arma::cube(V_aux.begin(), n, k, TT, false);
-    Rcout << "Fatti E and M step\n";
     
     lk_old = lk;
     llk_list = HMcont_ComputeLogLik(S, piv, Pi, Mu, Si);
     lk = llk_list["LogLik"];
-    Rcout << "N. Iter: " << it << " - LogLik: " << lk << "\n";
     lkv(it) = lk;
     it++;
     alt = HMcont_CheckConvergence(lk, lk_old, piv, Pi, Mu, Si, piv_old, Pi_old, Mu_old, Si_old, it, tol_lk, tol_theta, maxit);
-    Rcout << "Finito passo ciclo";
   }
   
   int np = (k - 1) + k * r + r * (r + 1)/2;
@@ -385,7 +381,6 @@ Rcpp::List HMcont_TEM(arma::cube S, int k, double tol_lk, double tol_theta, int 
   int r = S.n_slices;
   arma::mat Sv = arma::reshape(arma::mat(S.memptr(), S.n_elem, 1, false), n*TT, r);
   arma::cube V(n, k, TT);
-  Rcout << "Fatto passo preliminare\n";
   
   while (!alt) {
     double temp = HMcont_Temperature(it+1, profile, profile_pars);
@@ -402,16 +397,13 @@ Rcpp::List HMcont_TEM(arma::cube S, int k, double tol_lk, double tol_theta, int 
     Si = arma::mat(Si_aux.begin(), r, r, false);
     Rcpp::NumericVector V_aux = tE_list["V"];
     V = arma::cube(V_aux.begin(), n, k, TT, false);
-    Rcout << "Fatti E and M step\n";
   
     lk_old = lk;
     llk_list = HMcont_ComputeLogLik(S, piv, Pi, Mu, Si);
     lk = llk_list["LogLik"];
-    Rcout << "N. Iter: " << it << " - LogLik: " << lk << "\n";
     lkv(it) = lk;
     it++;
-    alt = HMcont_CheckConvergence(lk, lk_old, piv, Pi, Mu, Si, piv_old, Pi_old, Mu_old, Si_old, it, tol_lk, tol_theta, maxit);
-    Rcout << "Finito passo ciclo";
+    alt = HMcont_CheckConvergence(lk, lk_old, piv, Pi, Mu, Si, piv_old, Pi_old, Mu_old, Si_old, it, tol_lk, tol_theta, maxit-1);
   }
 
   Rcpp::List E_list = HMcont_E_step(n, TT, k, llk_list, Pi);
