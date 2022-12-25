@@ -333,6 +333,7 @@ Rcpp::List HMcont_EM(arma::cube S, int k, double tol_lk, double tol_theta, int m
     lk_old = lk;
     llk_list = HMcont_ComputeLogLik(S, piv, Pi, Mu, Si);
     lk = llk_list["LogLik"];
+    Rcout << "N. Iter: " << it << " - LogLik: " << lk << "\n";
     lkv(it) = lk;
     it++;
     alt = HMcont_CheckConvergence(lk, lk_old, piv, Pi, Mu, Si, piv_old, Pi_old, Mu_old, Si_old, it, tol_lk, tol_theta, maxit);
