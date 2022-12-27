@@ -9,8 +9,8 @@ HMcat_ComputeLogLik <- function(S, yv, piv, Pi, Phi) {
     .Call(`_estDLVM_HMcat_ComputeLogLik`, S, yv, piv, Pi, Phi)
 }
 
-HMcat_CheckConvergence <- function(lk, lk_old, piv, Pi, Phi, piv_old, Pi_old, Phi_old, it, tol_lk, tol_theta, maxit) {
-    .Call(`_estDLVM_HMcat_CheckConvergence`, lk, lk_old, piv, Pi, Phi, piv_old, Pi_old, Phi_old, it, tol_lk, tol_theta, maxit)
+HMcat_CheckConvergence <- function(LogLik, lk_old, piv, Pi, Phi, piv_old, Pi_old, Phi_old, it, tol_lk, tol_theta, maxit) {
+    .Call(`_estDLVM_HMcat_CheckConvergence`, LogLik, lk_old, piv, Pi, Phi, piv_old, Pi_old, Phi_old, it, tol_lk, tol_theta, maxit)
 }
 
 HMcat_E_step <- function(yv, ns, TT, k, llk_list, Pi) {
@@ -73,8 +73,8 @@ HMcont_ComputeLogLik <- function(S, piv, Pi, Mu, Si) {
     .Call(`_estDLVM_HMcont_ComputeLogLik`, S, piv, Pi, Mu, Si)
 }
 
-HMcont_CheckConvergence <- function(lk, lk_old, piv, Pi, Mu, Si, piv_old, Pi_old, Mu_old, Si_old, it, tol_lk, tol_theta, maxit) {
-    .Call(`_estDLVM_HMcont_CheckConvergence`, lk, lk_old, piv, Pi, Mu, Si, piv_old, Pi_old, Mu_old, Si_old, it, tol_lk, tol_theta, maxit)
+HMcont_CheckConvergence <- function(LogLik, lk_old, piv, Pi, piv_old, Pi_old, it, tol_lk, tol_theta, maxit) {
+    .Call(`_estDLVM_HMcont_CheckConvergence`, LogLik, lk_old, piv, Pi, piv_old, Pi_old, it, tol_lk, tol_theta, maxit)
 }
 
 HMcont_E_step <- function(n, TT, k, llk_list, Pi) {
@@ -129,8 +129,8 @@ LC_Temperature <- function(h, profile, profile_pars) {
     .Call(`_estDLVM_LC_Temperature`, h, profile, profile_pars)
 }
 
-LC_CheckConvergence <- function(lk, lk_old, piv, Phi, piv_old, Phi_old, it, tol_lk, tol_theta, maxit) {
-    .Call(`_estDLVM_LC_CheckConvergence`, lk, lk_old, piv, Phi, piv_old, Phi_old, it, tol_lk, tol_theta, maxit)
+LC_CheckConvergence <- function(LogLik, LogLik_old, piv, Phi, piv_old, Phi_old, it, tol_lk, tol_theta, maxit) {
+    .Call(`_estDLVM_LC_CheckConvergence`, LogLik, LogLik_old, piv, Phi, piv_old, Phi_old, it, tol_lk, tol_theta, maxit)
 }
 
 LC_EM_step <- function(S, yv, C, ns, r, n, k, piv, Piv, Psi, Phi) {
@@ -175,5 +175,69 @@ LC_Mutation_step <- function(ns, k, V, prob_mut) {
 
 LC_EEM <- function(S, yv, k, tol_lk, tol_theta, maxit, n_parents, n_children, prob_mut, R) {
     .Call(`_estDLVM_LC_EEM`, S, yv, k, tol_lk, tol_theta, maxit, n_parents, n_children, prob_mut, R)
+}
+
+bin_coeff <- function(n, m) {
+    .Call(`_estDLVM_bin_coeff`, n, m)
+}
+
+SB_compute_tau <- function(V, B, pi, Y, k, n) {
+    .Call(`_estDLVM_SB_compute_tau`, V, B, pi, Y, k, n)
+}
+
+SB_VE_step <- function(V, B, pi, Y, k, n, tol_lk, maxit_FP) {
+    .Call(`_estDLVM_SB_VE_step`, V, B, pi, Y, k, n, tol_lk, maxit_FP)
+}
+
+SB_compute_B <- function(V, Y, k, n) {
+    .Call(`_estDLVM_SB_compute_B`, V, Y, k, n)
+}
+
+SB_compute_pi <- function(V, n) {
+    .Call(`_estDLVM_SB_compute_pi`, V, n)
+}
+
+SB_compute_ELBO <- function(V, B, pi, Y, k, n) {
+    .Call(`_estDLVM_SB_compute_ELBO`, V, B, pi, Y, k, n)
+}
+
+SB_compute_LogLik <- function(V, B, pi, Y, k, n) {
+    .Call(`_estDLVM_SB_compute_LogLik`, V, B, pi, Y, k, n)
+}
+
+SB_VEM <- function(Y, k, n, tol_lk, maxit, maxit_FP, V) {
+    .Call(`_estDLVM_SB_VEM`, Y, k, n, tol_lk, maxit, maxit_FP, V)
+}
+
+SB_VEM_Q1 <- function(Y, k, n) {
+    .Call(`_estDLVM_SB_VEM_Q1`, Y, k, n)
+}
+
+SB_Initialization_step <- function(n, k, n_parents) {
+    .Call(`_estDLVM_SB_Initialization_step`, n, k, n_parents)
+}
+
+SB_ME_step <- function(Y, n, V, k, R, maxit_FP, tol_lk, tol_theta) {
+    .Call(`_estDLVM_SB_ME_step`, Y, n, V, k, R, maxit_FP, tol_lk, tol_theta)
+}
+
+SB_LastME_step <- function(Y, n, V, k, R, maxit_FP, tol_lk, tol_theta) {
+    .Call(`_estDLVM_SB_LastME_step`, Y, n, V, k, R, maxit_FP, tol_lk, tol_theta)
+}
+
+SB_CrossOver_step <- function(n, P, n_children, n_parents) {
+    .Call(`_estDLVM_SB_CrossOver_step`, n, P, n_children, n_parents)
+}
+
+SB_Selection_step <- function(PV_p, PV_c, fit_p, fit_c, n_parents, n_children) {
+    .Call(`_estDLVM_SB_Selection_step`, PV_p, PV_c, fit_p, fit_c, n_parents, n_children)
+}
+
+SB_Mutation_step <- function(n, k, V, prob_mut) {
+    .Call(`_estDLVM_SB_Mutation_step`, n, k, V, prob_mut)
+}
+
+SB_EVEM <- function(Y, k, tol_lk, tol_theta, maxit, maxit_FP, n_parents, n_children, prob_mut, R) {
+    .Call(`_estDLVM_SB_EVEM`, Y, k, tol_lk, tol_theta, maxit, maxit_FP, n_parents, n_children, prob_mut, R)
 }
 
