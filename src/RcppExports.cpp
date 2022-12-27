@@ -40,12 +40,12 @@ BEGIN_RCPP
 END_RCPP
 }
 // HMcat_CheckConvergence
-bool HMcat_CheckConvergence(double lk, double lk_old, arma::rowvec piv, arma::cube Pi, arma::cube Phi, arma::rowvec piv_old, arma::cube Pi_old, arma::cube Phi_old, int it, double tol_lk, double tol_theta, int maxit);
-RcppExport SEXP _estDLVM_HMcat_CheckConvergence(SEXP lkSEXP, SEXP lk_oldSEXP, SEXP pivSEXP, SEXP PiSEXP, SEXP PhiSEXP, SEXP piv_oldSEXP, SEXP Pi_oldSEXP, SEXP Phi_oldSEXP, SEXP itSEXP, SEXP tol_lkSEXP, SEXP tol_thetaSEXP, SEXP maxitSEXP) {
+bool HMcat_CheckConvergence(double LogLik, double lk_old, arma::rowvec piv, arma::cube Pi, arma::cube Phi, arma::rowvec piv_old, arma::cube Pi_old, arma::cube Phi_old, int it, double tol_lk, double tol_theta, int maxit);
+RcppExport SEXP _estDLVM_HMcat_CheckConvergence(SEXP LogLikSEXP, SEXP lk_oldSEXP, SEXP pivSEXP, SEXP PiSEXP, SEXP PhiSEXP, SEXP piv_oldSEXP, SEXP Pi_oldSEXP, SEXP Phi_oldSEXP, SEXP itSEXP, SEXP tol_lkSEXP, SEXP tol_thetaSEXP, SEXP maxitSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type lk(lkSEXP);
+    Rcpp::traits::input_parameter< double >::type LogLik(LogLikSEXP);
     Rcpp::traits::input_parameter< double >::type lk_old(lk_oldSEXP);
     Rcpp::traits::input_parameter< arma::rowvec >::type piv(pivSEXP);
     Rcpp::traits::input_parameter< arma::cube >::type Pi(PiSEXP);
@@ -57,7 +57,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type tol_lk(tol_lkSEXP);
     Rcpp::traits::input_parameter< double >::type tol_theta(tol_thetaSEXP);
     Rcpp::traits::input_parameter< int >::type maxit(maxitSEXP);
-    rcpp_result_gen = Rcpp::wrap(HMcat_CheckConvergence(lk, lk_old, piv, Pi, Phi, piv_old, Pi_old, Phi_old, it, tol_lk, tol_theta, maxit));
+    rcpp_result_gen = Rcpp::wrap(HMcat_CheckConvergence(LogLik, lk_old, piv, Pi, Phi, piv_old, Pi_old, Phi_old, it, tol_lk, tol_theta, maxit));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -318,26 +318,22 @@ BEGIN_RCPP
 END_RCPP
 }
 // HMcont_CheckConvergence
-bool HMcont_CheckConvergence(double lk, double lk_old, arma::rowvec piv, arma::cube Pi, arma::mat Mu, arma::mat Si, arma::rowvec piv_old, arma::cube Pi_old, arma::mat Mu_old, arma::mat Si_old, int it, double tol_lk, double tol_theta, int maxit);
-RcppExport SEXP _estDLVM_HMcont_CheckConvergence(SEXP lkSEXP, SEXP lk_oldSEXP, SEXP pivSEXP, SEXP PiSEXP, SEXP MuSEXP, SEXP SiSEXP, SEXP piv_oldSEXP, SEXP Pi_oldSEXP, SEXP Mu_oldSEXP, SEXP Si_oldSEXP, SEXP itSEXP, SEXP tol_lkSEXP, SEXP tol_thetaSEXP, SEXP maxitSEXP) {
+bool HMcont_CheckConvergence(double LogLik, double lk_old, arma::rowvec piv, arma::cube Pi, arma::rowvec piv_old, arma::cube Pi_old, int it, double tol_lk, double tol_theta, int maxit);
+RcppExport SEXP _estDLVM_HMcont_CheckConvergence(SEXP LogLikSEXP, SEXP lk_oldSEXP, SEXP pivSEXP, SEXP PiSEXP, SEXP piv_oldSEXP, SEXP Pi_oldSEXP, SEXP itSEXP, SEXP tol_lkSEXP, SEXP tol_thetaSEXP, SEXP maxitSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type lk(lkSEXP);
+    Rcpp::traits::input_parameter< double >::type LogLik(LogLikSEXP);
     Rcpp::traits::input_parameter< double >::type lk_old(lk_oldSEXP);
     Rcpp::traits::input_parameter< arma::rowvec >::type piv(pivSEXP);
     Rcpp::traits::input_parameter< arma::cube >::type Pi(PiSEXP);
-    Rcpp::traits::input_parameter< arma::mat >::type Mu(MuSEXP);
-    Rcpp::traits::input_parameter< arma::mat >::type Si(SiSEXP);
     Rcpp::traits::input_parameter< arma::rowvec >::type piv_old(piv_oldSEXP);
     Rcpp::traits::input_parameter< arma::cube >::type Pi_old(Pi_oldSEXP);
-    Rcpp::traits::input_parameter< arma::mat >::type Mu_old(Mu_oldSEXP);
-    Rcpp::traits::input_parameter< arma::mat >::type Si_old(Si_oldSEXP);
     Rcpp::traits::input_parameter< int >::type it(itSEXP);
     Rcpp::traits::input_parameter< double >::type tol_lk(tol_lkSEXP);
     Rcpp::traits::input_parameter< double >::type tol_theta(tol_thetaSEXP);
     Rcpp::traits::input_parameter< int >::type maxit(maxitSEXP);
-    rcpp_result_gen = Rcpp::wrap(HMcont_CheckConvergence(lk, lk_old, piv, Pi, Mu, Si, piv_old, Pi_old, Mu_old, Si_old, it, tol_lk, tol_theta, maxit));
+    rcpp_result_gen = Rcpp::wrap(HMcont_CheckConvergence(LogLik, lk_old, piv, Pi, piv_old, Pi_old, it, tol_lk, tol_theta, maxit));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -561,13 +557,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // LC_CheckConvergence
-bool LC_CheckConvergence(double lk, double lk_old, arma::rowvec piv, arma::cube Phi, arma::rowvec piv_old, arma::cube Phi_old, int it, double tol_lk, double tol_theta, int maxit);
-RcppExport SEXP _estDLVM_LC_CheckConvergence(SEXP lkSEXP, SEXP lk_oldSEXP, SEXP pivSEXP, SEXP PhiSEXP, SEXP piv_oldSEXP, SEXP Phi_oldSEXP, SEXP itSEXP, SEXP tol_lkSEXP, SEXP tol_thetaSEXP, SEXP maxitSEXP) {
+bool LC_CheckConvergence(double LogLik, double LogLik_old, arma::rowvec piv, arma::cube Phi, arma::rowvec piv_old, arma::cube Phi_old, int it, double tol_lk, double tol_theta, int maxit);
+RcppExport SEXP _estDLVM_LC_CheckConvergence(SEXP LogLikSEXP, SEXP LogLik_oldSEXP, SEXP pivSEXP, SEXP PhiSEXP, SEXP piv_oldSEXP, SEXP Phi_oldSEXP, SEXP itSEXP, SEXP tol_lkSEXP, SEXP tol_thetaSEXP, SEXP maxitSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type lk(lkSEXP);
-    Rcpp::traits::input_parameter< double >::type lk_old(lk_oldSEXP);
+    Rcpp::traits::input_parameter< double >::type LogLik(LogLikSEXP);
+    Rcpp::traits::input_parameter< double >::type LogLik_old(LogLik_oldSEXP);
     Rcpp::traits::input_parameter< arma::rowvec >::type piv(pivSEXP);
     Rcpp::traits::input_parameter< arma::cube >::type Phi(PhiSEXP);
     Rcpp::traits::input_parameter< arma::rowvec >::type piv_old(piv_oldSEXP);
@@ -576,7 +572,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type tol_lk(tol_lkSEXP);
     Rcpp::traits::input_parameter< double >::type tol_theta(tol_thetaSEXP);
     Rcpp::traits::input_parameter< int >::type maxit(maxitSEXP);
-    rcpp_result_gen = Rcpp::wrap(LC_CheckConvergence(lk, lk_old, piv, Phi, piv_old, Phi_old, it, tol_lk, tol_theta, maxit));
+    rcpp_result_gen = Rcpp::wrap(LC_CheckConvergence(LogLik, LogLik_old, piv, Phi, piv_old, Phi_old, it, tol_lk, tol_theta, maxit));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -788,6 +784,253 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// bin_coeff
+int bin_coeff(const int n, const int m);
+RcppExport SEXP _estDLVM_bin_coeff(SEXP nSEXP, SEXP mSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const int >::type n(nSEXP);
+    Rcpp::traits::input_parameter< const int >::type m(mSEXP);
+    rcpp_result_gen = Rcpp::wrap(bin_coeff(n, m));
+    return rcpp_result_gen;
+END_RCPP
+}
+// SB_compute_tau
+arma::mat SB_compute_tau(arma::mat V, arma::mat B, arma::rowvec pi, arma::mat Y, int k, int n);
+RcppExport SEXP _estDLVM_SB_compute_tau(SEXP VSEXP, SEXP BSEXP, SEXP piSEXP, SEXP YSEXP, SEXP kSEXP, SEXP nSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat >::type V(VSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type B(BSEXP);
+    Rcpp::traits::input_parameter< arma::rowvec >::type pi(piSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type Y(YSEXP);
+    Rcpp::traits::input_parameter< int >::type k(kSEXP);
+    Rcpp::traits::input_parameter< int >::type n(nSEXP);
+    rcpp_result_gen = Rcpp::wrap(SB_compute_tau(V, B, pi, Y, k, n));
+    return rcpp_result_gen;
+END_RCPP
+}
+// SB_VE_step
+Rcpp::List SB_VE_step(arma::mat V, arma::mat B, arma::rowvec pi, arma::mat Y, int k, int n, double tol_lk, int maxit_FP);
+RcppExport SEXP _estDLVM_SB_VE_step(SEXP VSEXP, SEXP BSEXP, SEXP piSEXP, SEXP YSEXP, SEXP kSEXP, SEXP nSEXP, SEXP tol_lkSEXP, SEXP maxit_FPSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat >::type V(VSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type B(BSEXP);
+    Rcpp::traits::input_parameter< arma::rowvec >::type pi(piSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type Y(YSEXP);
+    Rcpp::traits::input_parameter< int >::type k(kSEXP);
+    Rcpp::traits::input_parameter< int >::type n(nSEXP);
+    Rcpp::traits::input_parameter< double >::type tol_lk(tol_lkSEXP);
+    Rcpp::traits::input_parameter< int >::type maxit_FP(maxit_FPSEXP);
+    rcpp_result_gen = Rcpp::wrap(SB_VE_step(V, B, pi, Y, k, n, tol_lk, maxit_FP));
+    return rcpp_result_gen;
+END_RCPP
+}
+// SB_compute_B
+arma::mat SB_compute_B(arma::mat V, arma::mat Y, int k, int n);
+RcppExport SEXP _estDLVM_SB_compute_B(SEXP VSEXP, SEXP YSEXP, SEXP kSEXP, SEXP nSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat >::type V(VSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type Y(YSEXP);
+    Rcpp::traits::input_parameter< int >::type k(kSEXP);
+    Rcpp::traits::input_parameter< int >::type n(nSEXP);
+    rcpp_result_gen = Rcpp::wrap(SB_compute_B(V, Y, k, n));
+    return rcpp_result_gen;
+END_RCPP
+}
+// SB_compute_pi
+arma::rowvec SB_compute_pi(arma::mat V, int n);
+RcppExport SEXP _estDLVM_SB_compute_pi(SEXP VSEXP, SEXP nSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat >::type V(VSEXP);
+    Rcpp::traits::input_parameter< int >::type n(nSEXP);
+    rcpp_result_gen = Rcpp::wrap(SB_compute_pi(V, n));
+    return rcpp_result_gen;
+END_RCPP
+}
+// SB_compute_ELBO
+double SB_compute_ELBO(arma::mat V, arma::mat B, arma::rowvec pi, arma::mat Y, int k, int n);
+RcppExport SEXP _estDLVM_SB_compute_ELBO(SEXP VSEXP, SEXP BSEXP, SEXP piSEXP, SEXP YSEXP, SEXP kSEXP, SEXP nSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat >::type V(VSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type B(BSEXP);
+    Rcpp::traits::input_parameter< arma::rowvec >::type pi(piSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type Y(YSEXP);
+    Rcpp::traits::input_parameter< int >::type k(kSEXP);
+    Rcpp::traits::input_parameter< int >::type n(nSEXP);
+    rcpp_result_gen = Rcpp::wrap(SB_compute_ELBO(V, B, pi, Y, k, n));
+    return rcpp_result_gen;
+END_RCPP
+}
+// SB_compute_LogLik
+double SB_compute_LogLik(arma::mat V, arma::mat B, arma::rowvec pi, arma::mat Y, int k, int n);
+RcppExport SEXP _estDLVM_SB_compute_LogLik(SEXP VSEXP, SEXP BSEXP, SEXP piSEXP, SEXP YSEXP, SEXP kSEXP, SEXP nSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat >::type V(VSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type B(BSEXP);
+    Rcpp::traits::input_parameter< arma::rowvec >::type pi(piSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type Y(YSEXP);
+    Rcpp::traits::input_parameter< int >::type k(kSEXP);
+    Rcpp::traits::input_parameter< int >::type n(nSEXP);
+    rcpp_result_gen = Rcpp::wrap(SB_compute_LogLik(V, B, pi, Y, k, n));
+    return rcpp_result_gen;
+END_RCPP
+}
+// SB_VEM
+Rcpp::List SB_VEM(arma::mat Y, int k, int n, double tol_lk, int maxit, int maxit_FP, arma::mat V);
+RcppExport SEXP _estDLVM_SB_VEM(SEXP YSEXP, SEXP kSEXP, SEXP nSEXP, SEXP tol_lkSEXP, SEXP maxitSEXP, SEXP maxit_FPSEXP, SEXP VSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat >::type Y(YSEXP);
+    Rcpp::traits::input_parameter< int >::type k(kSEXP);
+    Rcpp::traits::input_parameter< int >::type n(nSEXP);
+    Rcpp::traits::input_parameter< double >::type tol_lk(tol_lkSEXP);
+    Rcpp::traits::input_parameter< int >::type maxit(maxitSEXP);
+    Rcpp::traits::input_parameter< int >::type maxit_FP(maxit_FPSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type V(VSEXP);
+    rcpp_result_gen = Rcpp::wrap(SB_VEM(Y, k, n, tol_lk, maxit, maxit_FP, V));
+    return rcpp_result_gen;
+END_RCPP
+}
+// SB_VEM_Q1
+Rcpp::List SB_VEM_Q1(arma::mat Y, int k, int n);
+RcppExport SEXP _estDLVM_SB_VEM_Q1(SEXP YSEXP, SEXP kSEXP, SEXP nSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat >::type Y(YSEXP);
+    Rcpp::traits::input_parameter< int >::type k(kSEXP);
+    Rcpp::traits::input_parameter< int >::type n(nSEXP);
+    rcpp_result_gen = Rcpp::wrap(SB_VEM_Q1(Y, k, n));
+    return rcpp_result_gen;
+END_RCPP
+}
+// SB_Initialization_step
+Rcpp::List SB_Initialization_step(int n, int k, int n_parents);
+RcppExport SEXP _estDLVM_SB_Initialization_step(SEXP nSEXP, SEXP kSEXP, SEXP n_parentsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type n(nSEXP);
+    Rcpp::traits::input_parameter< int >::type k(kSEXP);
+    Rcpp::traits::input_parameter< int >::type n_parents(n_parentsSEXP);
+    rcpp_result_gen = Rcpp::wrap(SB_Initialization_step(n, k, n_parents));
+    return rcpp_result_gen;
+END_RCPP
+}
+// SB_ME_step
+Rcpp::List SB_ME_step(arma::mat Y, int n, arma::mat V, int k, int R, int maxit_FP, double tol_lk, double tol_theta);
+RcppExport SEXP _estDLVM_SB_ME_step(SEXP YSEXP, SEXP nSEXP, SEXP VSEXP, SEXP kSEXP, SEXP RSEXP, SEXP maxit_FPSEXP, SEXP tol_lkSEXP, SEXP tol_thetaSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat >::type Y(YSEXP);
+    Rcpp::traits::input_parameter< int >::type n(nSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type V(VSEXP);
+    Rcpp::traits::input_parameter< int >::type k(kSEXP);
+    Rcpp::traits::input_parameter< int >::type R(RSEXP);
+    Rcpp::traits::input_parameter< int >::type maxit_FP(maxit_FPSEXP);
+    Rcpp::traits::input_parameter< double >::type tol_lk(tol_lkSEXP);
+    Rcpp::traits::input_parameter< double >::type tol_theta(tol_thetaSEXP);
+    rcpp_result_gen = Rcpp::wrap(SB_ME_step(Y, n, V, k, R, maxit_FP, tol_lk, tol_theta));
+    return rcpp_result_gen;
+END_RCPP
+}
+// SB_LastME_step
+Rcpp::List SB_LastME_step(arma::mat Y, int n, arma::mat V, int k, int R, int maxit_FP, double tol_lk, double tol_theta);
+RcppExport SEXP _estDLVM_SB_LastME_step(SEXP YSEXP, SEXP nSEXP, SEXP VSEXP, SEXP kSEXP, SEXP RSEXP, SEXP maxit_FPSEXP, SEXP tol_lkSEXP, SEXP tol_thetaSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat >::type Y(YSEXP);
+    Rcpp::traits::input_parameter< int >::type n(nSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type V(VSEXP);
+    Rcpp::traits::input_parameter< int >::type k(kSEXP);
+    Rcpp::traits::input_parameter< int >::type R(RSEXP);
+    Rcpp::traits::input_parameter< int >::type maxit_FP(maxit_FPSEXP);
+    Rcpp::traits::input_parameter< double >::type tol_lk(tol_lkSEXP);
+    Rcpp::traits::input_parameter< double >::type tol_theta(tol_thetaSEXP);
+    rcpp_result_gen = Rcpp::wrap(SB_LastME_step(Y, n, V, k, R, maxit_FP, tol_lk, tol_theta));
+    return rcpp_result_gen;
+END_RCPP
+}
+// SB_CrossOver_step
+Rcpp::List SB_CrossOver_step(int n, Rcpp::List P, int n_children, int n_parents);
+RcppExport SEXP _estDLVM_SB_CrossOver_step(SEXP nSEXP, SEXP PSEXP, SEXP n_childrenSEXP, SEXP n_parentsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type n(nSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type P(PSEXP);
+    Rcpp::traits::input_parameter< int >::type n_children(n_childrenSEXP);
+    Rcpp::traits::input_parameter< int >::type n_parents(n_parentsSEXP);
+    rcpp_result_gen = Rcpp::wrap(SB_CrossOver_step(n, P, n_children, n_parents));
+    return rcpp_result_gen;
+END_RCPP
+}
+// SB_Selection_step
+Rcpp::List SB_Selection_step(Rcpp::List PV_p, Rcpp::List PV_c, arma::rowvec fit_p, arma::rowvec fit_c, int n_parents, int n_children);
+RcppExport SEXP _estDLVM_SB_Selection_step(SEXP PV_pSEXP, SEXP PV_cSEXP, SEXP fit_pSEXP, SEXP fit_cSEXP, SEXP n_parentsSEXP, SEXP n_childrenSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::List >::type PV_p(PV_pSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type PV_c(PV_cSEXP);
+    Rcpp::traits::input_parameter< arma::rowvec >::type fit_p(fit_pSEXP);
+    Rcpp::traits::input_parameter< arma::rowvec >::type fit_c(fit_cSEXP);
+    Rcpp::traits::input_parameter< int >::type n_parents(n_parentsSEXP);
+    Rcpp::traits::input_parameter< int >::type n_children(n_childrenSEXP);
+    rcpp_result_gen = Rcpp::wrap(SB_Selection_step(PV_p, PV_c, fit_p, fit_c, n_parents, n_children));
+    return rcpp_result_gen;
+END_RCPP
+}
+// SB_Mutation_step
+arma::mat SB_Mutation_step(int n, int k, arma::mat V, double prob_mut);
+RcppExport SEXP _estDLVM_SB_Mutation_step(SEXP nSEXP, SEXP kSEXP, SEXP VSEXP, SEXP prob_mutSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type n(nSEXP);
+    Rcpp::traits::input_parameter< int >::type k(kSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type V(VSEXP);
+    Rcpp::traits::input_parameter< double >::type prob_mut(prob_mutSEXP);
+    rcpp_result_gen = Rcpp::wrap(SB_Mutation_step(n, k, V, prob_mut));
+    return rcpp_result_gen;
+END_RCPP
+}
+// SB_EVEM
+Rcpp::List SB_EVEM(arma::mat Y, int k, double tol_lk, double tol_theta, int maxit, int maxit_FP, int n_parents, int n_children, double prob_mut, int R);
+RcppExport SEXP _estDLVM_SB_EVEM(SEXP YSEXP, SEXP kSEXP, SEXP tol_lkSEXP, SEXP tol_thetaSEXP, SEXP maxitSEXP, SEXP maxit_FPSEXP, SEXP n_parentsSEXP, SEXP n_childrenSEXP, SEXP prob_mutSEXP, SEXP RSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat >::type Y(YSEXP);
+    Rcpp::traits::input_parameter< int >::type k(kSEXP);
+    Rcpp::traits::input_parameter< double >::type tol_lk(tol_lkSEXP);
+    Rcpp::traits::input_parameter< double >::type tol_theta(tol_thetaSEXP);
+    Rcpp::traits::input_parameter< int >::type maxit(maxitSEXP);
+    Rcpp::traits::input_parameter< int >::type maxit_FP(maxit_FPSEXP);
+    Rcpp::traits::input_parameter< int >::type n_parents(n_parentsSEXP);
+    Rcpp::traits::input_parameter< int >::type n_children(n_childrenSEXP);
+    Rcpp::traits::input_parameter< double >::type prob_mut(prob_mutSEXP);
+    Rcpp::traits::input_parameter< int >::type R(RSEXP);
+    rcpp_result_gen = Rcpp::wrap(SB_EVEM(Y, k, tol_lk, tol_theta, maxit, maxit_FP, n_parents, n_children, prob_mut, R));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_estDLVM_HMcat_Temperature", (DL_FUNC) &_estDLVM_HMcat_Temperature, 3},
@@ -808,7 +1051,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_estDLVM_HMcont_Temperature", (DL_FUNC) &_estDLVM_HMcont_Temperature, 3},
     {"_estDLVM_dmvnorm", (DL_FUNC) &_estDLVM_dmvnorm, 3},
     {"_estDLVM_HMcont_ComputeLogLik", (DL_FUNC) &_estDLVM_HMcont_ComputeLogLik, 5},
-    {"_estDLVM_HMcont_CheckConvergence", (DL_FUNC) &_estDLVM_HMcont_CheckConvergence, 14},
+    {"_estDLVM_HMcont_CheckConvergence", (DL_FUNC) &_estDLVM_HMcont_CheckConvergence, 10},
     {"_estDLVM_HMcont_E_step", (DL_FUNC) &_estDLVM_HMcont_E_step, 5},
     {"_estDLVM_HMcont_TE_step", (DL_FUNC) &_estDLVM_HMcont_TE_step, 6},
     {"_estDLVM_HMcont_M_step", (DL_FUNC) &_estDLVM_HMcont_M_step, 7},
@@ -834,6 +1077,22 @@ static const R_CallMethodDef CallEntries[] = {
     {"_estDLVM_LC_Selection_step", (DL_FUNC) &_estDLVM_LC_Selection_step, 6},
     {"_estDLVM_LC_Mutation_step", (DL_FUNC) &_estDLVM_LC_Mutation_step, 4},
     {"_estDLVM_LC_EEM", (DL_FUNC) &_estDLVM_LC_EEM, 10},
+    {"_estDLVM_bin_coeff", (DL_FUNC) &_estDLVM_bin_coeff, 2},
+    {"_estDLVM_SB_compute_tau", (DL_FUNC) &_estDLVM_SB_compute_tau, 6},
+    {"_estDLVM_SB_VE_step", (DL_FUNC) &_estDLVM_SB_VE_step, 8},
+    {"_estDLVM_SB_compute_B", (DL_FUNC) &_estDLVM_SB_compute_B, 4},
+    {"_estDLVM_SB_compute_pi", (DL_FUNC) &_estDLVM_SB_compute_pi, 2},
+    {"_estDLVM_SB_compute_ELBO", (DL_FUNC) &_estDLVM_SB_compute_ELBO, 6},
+    {"_estDLVM_SB_compute_LogLik", (DL_FUNC) &_estDLVM_SB_compute_LogLik, 6},
+    {"_estDLVM_SB_VEM", (DL_FUNC) &_estDLVM_SB_VEM, 7},
+    {"_estDLVM_SB_VEM_Q1", (DL_FUNC) &_estDLVM_SB_VEM_Q1, 3},
+    {"_estDLVM_SB_Initialization_step", (DL_FUNC) &_estDLVM_SB_Initialization_step, 3},
+    {"_estDLVM_SB_ME_step", (DL_FUNC) &_estDLVM_SB_ME_step, 8},
+    {"_estDLVM_SB_LastME_step", (DL_FUNC) &_estDLVM_SB_LastME_step, 8},
+    {"_estDLVM_SB_CrossOver_step", (DL_FUNC) &_estDLVM_SB_CrossOver_step, 4},
+    {"_estDLVM_SB_Selection_step", (DL_FUNC) &_estDLVM_SB_Selection_step, 6},
+    {"_estDLVM_SB_Mutation_step", (DL_FUNC) &_estDLVM_SB_Mutation_step, 4},
+    {"_estDLVM_SB_EVEM", (DL_FUNC) &_estDLVM_SB_EVEM, 10},
     {NULL, NULL, 0}
 };
 

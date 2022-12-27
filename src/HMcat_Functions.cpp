@@ -89,7 +89,7 @@ Rcpp::List HMcat_ComputeLogLik(arma::cube S, arma::colvec yv, arma::rowvec piv, 
 
 
 // [[Rcpp::export]]
-bool HMcat_CheckConvergence (double lk, double lk_old, arma::rowvec piv, arma::cube Pi, arma::cube Phi, arma::rowvec piv_old, arma::cube Pi_old, arma::cube Phi_old, int it, double tol_lk, double tol_theta, int maxit) {
+bool HMcat_CheckConvergence (double LogLik, double lk_old, arma::rowvec piv, arma::cube Pi, arma::cube Phi, arma::rowvec piv_old, arma::cube Pi_old, arma::cube Phi_old, int it, double tol_lk, double tol_theta, int maxit) {
   int piv_dim = piv.n_elem;
   int Pi_dim = Pi.n_elem;
   int Phi_dim = Phi.n_elem;
@@ -109,7 +109,7 @@ bool HMcat_CheckConvergence (double lk, double lk_old, arma::rowvec piv, arma::c
   theta_old.subvec(piv_dim, piv_dim+Pi_dim-1) = Pi_old_vec;
   theta_old.subvec(piv_dim+Pi_dim, piv_dim+Pi_dim+Phi_dim-1) = Phi_old_vec;
   
-  bool lk_conv = (abs(lk - lk_old)/abs(lk_old) < tol_lk);
+  bool lk_conv = (abs(LogLik - lk_old)/abs(lk_old) < tol_lk);
   bool theta_conv = (arma::max(arma::abs(theta - theta_old)) < tol_theta);
   bool maxit_reached = (it > maxit-1);
   bool minit_done = (it > 2);
@@ -283,9 +283,9 @@ Rcpp::List HMcat_EM(arma::cube S, arma::colvec yv, int k, double tol_lk, double 
   arma::rowvec piv_old; arma::cube Pi_old; arma::cube Phi_old;
   
   Rcpp::List llk_list = HMcat_ComputeLogLik(S, yv, piv, Pi, Phi);
-  double lk = llk_list["LogLik"];
+  double LogLik = llk_list["LogLik"];
   double lk_old;
-  arma::rowvec lkv(maxit);
+  arma::rowvec LogLik_vec(maxit);
   int it = 0;
   bool alt = false;
 
@@ -311,12 +311,12 @@ Rcpp::List HMcat_EM(arma::cube S, arma::colvec yv, int k, double tol_lk, double 
     Rcpp::NumericVector V_aux = E_list["V"];
     V = arma::cube(V_aux.begin(), ns, k, TT, false);
 
-    lk_old = lk;
+    lk_old = LogLik;
     llk_list = HMcat_ComputeLogLik(S, yv, piv, Pi, Phi);
-    lk = llk_list["LogLik"];
-    lkv(it) = lk;
+    LogLik = llk_list["LogLik"];
+    LogLik_vec(it) = LogLik;
     it++;
-    alt = HMcat_CheckConvergence(lk, lk_old, piv, Pi, Phi, piv_old, Pi_old, Phi_old, it, tol_lk, tol_theta, maxit);
+    alt = HMcat_CheckConvergence(LogLik, lk_old, piv, Pi, Phi, piv_old, Pi_old, Phi_old, it, tol_lk, tol_theta, maxit);
   }
 
   int np = (k-1) + k * arma::accu(Cv);
@@ -327,8 +327,8 @@ Rcpp::List HMcat_EM(arma::cube S, arma::colvec yv, int k, double tol_lk, double 
   } else if (modBasic > 1) {
     np += 2 * k * (k - 1);
   }
-  double aic = -2 * lk + 2 * np;
-  double bic = -2 * lk + np * log(n);
+  double aic = -2 * LogLik + 2 * np;
+  double bic = -2 * LogLik + np * log(n);
 
   if (arma::any(yv != 1)) {
     for (int t = 0; t < TT; t++) {
@@ -338,8 +338,8 @@ Rcpp::List HMcat_EM(arma::cube S, arma::colvec yv, int k, double tol_lk, double 
     }
   }
 
-  return Rcpp::List::create(Rcpp::Named("lk") = lk,
-                            Rcpp::Named("lkv") = lkv.head(it),
+  return Rcpp::List::create(Rcpp::Named("LogLik") = LogLik,
+                            Rcpp::Named("LogLik_vec") = LogLik_vec.head(it),
                             Rcpp::Named("it") = it,
                             Rcpp::Named("piv") = piv,
                             Rcpp::Named("Pi") = Pi,
@@ -359,9 +359,9 @@ Rcpp::List HMcat_TEM(arma::cube S, arma::colvec yv, int k, double tol_lk, double
   arma::rowvec piv_old; arma::cube Pi_old; arma::cube Phi_old;
   
   Rcpp::List llk_list = HMcat_ComputeLogLik(S, yv, piv, Pi, Phi);
-  double lk = llk_list["LogLik"];
+  double LogLik = llk_list["LogLik"];
   double lk_old;
-  arma::rowvec lkv(maxit);
+  arma::rowvec LogLik_vec(maxit);
   int it = 0;
   bool alt = false;
   
@@ -388,12 +388,12 @@ Rcpp::List HMcat_TEM(arma::cube S, arma::colvec yv, int k, double tol_lk, double
     Rcpp::NumericVector V_aux = tE_list["V"];
     V = arma::cube(V_aux.begin(), ns, k, TT, false);
 
-    lk_old = lk;
+    lk_old = LogLik;
     llk_list = HMcat_ComputeLogLik(S, yv, piv, Pi, Phi);
-    lk = llk_list["LogLik"];
-    lkv(it) = lk;
+    LogLik = llk_list["LogLik"];
+    LogLik_vec(it) = LogLik;
     it++;
-    alt = HMcat_CheckConvergence(lk, lk_old, piv, Pi, Phi, piv_old, Pi_old, Phi_old, it, tol_lk, tol_theta, maxit-1);
+    alt = HMcat_CheckConvergence(LogLik, lk_old, piv, Pi, Phi, piv_old, Pi_old, Phi_old, it, tol_lk, tol_theta, maxit-1);
   }
 
   Rcpp::List E_list = HMcat_E_step(yv, ns, TT, k, llk_list, Pi);
@@ -407,10 +407,10 @@ Rcpp::List HMcat_TEM(arma::cube S, arma::colvec yv, int k, double tol_lk, double
   Rcpp::NumericVector V_aux = E_list["V"];
   V = arma::cube(V_aux.begin(), ns, k, TT, false);
 
-  lk_old = lk;
+  lk_old = LogLik;
   llk_list = HMcat_ComputeLogLik(S, yv, piv, Pi, Phi);
-  lk = llk_list["LogLik"];
-  lkv(it) = lk;
+  LogLik = llk_list["LogLik"];
+  LogLik_vec(it) = LogLik;
   it++;
 
   int np = (k-1) + k * arma::accu(Cv);
@@ -421,8 +421,8 @@ Rcpp::List HMcat_TEM(arma::cube S, arma::colvec yv, int k, double tol_lk, double
   } else if (modBasic > 1) {
     np += 2 * k * (k - 1);
   }
-  double aic = -2 * lk + 2 * np;
-  double bic = -2 * lk + np * log(n);
+  double aic = -2 * LogLik + 2 * np;
+  double bic = -2 * LogLik + np * log(n);
 
   if (arma::any(yv != 1)) {
     for (int t = 0; t < TT; t++) {
@@ -432,8 +432,8 @@ Rcpp::List HMcat_TEM(arma::cube S, arma::colvec yv, int k, double tol_lk, double
     }
   }
   
-  return Rcpp::List::create(Rcpp::Named("lk") = lk,
-                            Rcpp::Named("lkv") = lkv.head(it),
+  return Rcpp::List::create(Rcpp::Named("LogLik") = LogLik,
+                            Rcpp::Named("LogLik_vec") = LogLik_vec.head(it),
                             Rcpp::Named("it") = it,
                             Rcpp::Named("piv") = piv,
                             Rcpp::Named("Pi") = Pi,
@@ -524,14 +524,14 @@ Rcpp::List HMcat_ME_step(arma::cube S, arma::colvec yv, int k, double tol_lk, do
   arma::rowvec piv(k, arma::fill::zeros); arma::rowvec piv_old(k);
   arma::cube Pi(k, k, TT, arma::fill::zeros); arma::cube Pi_old(k, k, TT);
   arma::cube Phi(C+1, k, r, arma::fill::zeros); arma::cube Phi_old(C+1, k, r);
-  double lk = 0; double lk_old;
+  double LogLik = 0; double lk_old;
   arma::cube V;
   arma::cube U;
   int it = 0;
   bool alt = false;
   
   while (!alt) {
-    lk_old = lk; piv_old = piv; Pi_old = Pi; Phi_old = Phi;
+    lk_old = LogLik; piv_old = piv; Pi_old = Pi; Phi_old = Phi;
     
     Rcpp::List M_list = HMcat_M_step(Sv, n, ns, r, TT, k, Cv, C, P, modBasic);
     Rcpp::NumericMatrix piv_aux = M_list["piv"];
@@ -541,7 +541,7 @@ Rcpp::List HMcat_ME_step(arma::cube S, arma::colvec yv, int k, double tol_lk, do
     Rcpp::NumericVector Phi_aux = M_list["Phi"];
     Phi = arma::cube(Phi_aux.begin(), C+1, k, r, false);
     Rcpp::List llk_list = HMcat_ComputeLogLik(S, yv, piv, Pi, Phi);
-    lk = llk_list["LogLik"];
+    LogLik = llk_list["LogLik"];
     Rcpp::List E_list = HMcat_E_step(yv, ns, TT, k, llk_list, Pi);
     Rcpp::NumericVector V_aux = E_list["V"];
     V = arma::cube(V_aux.begin(), ns, k, TT, false);
@@ -550,12 +550,12 @@ Rcpp::List HMcat_ME_step(arma::cube S, arma::colvec yv, int k, double tol_lk, do
     P["V"] = V; P["U"] = U;
     
     it++;
-    alt = HMcat_CheckConvergence(lk, lk_old, piv, Pi, Phi, piv_old, Pi_old, Phi_old, it, tol_lk, tol_theta, maxit);
+    alt = HMcat_CheckConvergence(LogLik, lk_old, piv, Pi, Phi, piv_old, Pi_old, Phi_old, it, tol_lk, tol_theta, maxit);
   }
 
   return Rcpp::List::create(Rcpp::Named("V") = V,
                             Rcpp::Named("U") = U,
-                            Rcpp::Named("fit") = lk);
+                            Rcpp::Named("fit") = LogLik);
 }
 
 
@@ -573,14 +573,14 @@ Rcpp::List HMcat_LastME_step (arma::cube S, arma::colvec yv, int k, double tol_l
   arma::rowvec piv(k, arma::fill::zeros); arma::rowvec piv_old(k);
   arma::cube Pi(k, k, TT, arma::fill::zeros); arma::cube Pi_old(k, k, TT);
   arma::cube Phi(C+1, k, r, arma::fill::zeros); arma::cube Phi_old(C+1, k, r);
-  double lk = 0; double lk_old;
+  double LogLik = 0; double lk_old;
   arma::cube V;
   arma::cube U;
   int it = 0;
   bool alt = false;
   
   while (!alt) {
-    lk_old = lk; piv_old = piv; Pi_old = Pi; Phi_old = Phi;
+    lk_old = LogLik; piv_old = piv; Pi_old = Pi; Phi_old = Phi;
     
     Rcpp::List M_list = HMcat_M_step(Sv, n, ns, r, TT, k, Cv, C, P, modBasic);
     Rcpp::NumericMatrix piv_aux = M_list["piv"];
@@ -590,7 +590,7 @@ Rcpp::List HMcat_LastME_step (arma::cube S, arma::colvec yv, int k, double tol_l
     Rcpp::NumericVector Phi_aux = M_list["Phi"];
     Phi = arma::cube(Phi_aux.begin(), C+1, k, r, false);
     Rcpp::List llk_list = HMcat_ComputeLogLik(S, yv, piv, Pi, Phi);
-    lk = llk_list["LogLik"];
+    LogLik = llk_list["LogLik"];
     Rcpp::List E_list = HMcat_E_step(yv, ns, TT, k, llk_list, Pi);
     Rcpp::NumericVector V_aux = E_list["V"];
     V = arma::cube(V_aux.begin(), ns, k, TT, false);
@@ -599,7 +599,7 @@ Rcpp::List HMcat_LastME_step (arma::cube S, arma::colvec yv, int k, double tol_l
     P["V"] = V; P["U"] = U;
     
     it++;
-    alt = HMcat_CheckConvergence(lk, lk_old, piv, Pi, Phi, piv_old, Pi_old, Phi_old, it, tol_lk, tol_theta, maxit);
+    alt = HMcat_CheckConvergence(LogLik, lk_old, piv, Pi, Phi, piv_old, Pi_old, Phi_old, it, tol_lk, tol_theta, maxit);
   }
   
   
@@ -612,7 +612,7 @@ Rcpp::List HMcat_LastME_step (arma::cube S, arma::colvec yv, int k, double tol_l
   Rcpp::NumericVector Phi_aux = M_list["Phi"];
   Phi = arma::cube(Phi_aux.begin(), C+1, k, r, false);
   Rcpp::List llk_list = HMcat_ComputeLogLik(S, yv, piv, Pi, Phi);
-  lk = llk_list["LogLik"];
+  LogLik = llk_list["LogLik"];
   
   
   int np = (k-1) + k * arma::accu(Cv);
@@ -623,8 +623,8 @@ Rcpp::List HMcat_LastME_step (arma::cube S, arma::colvec yv, int k, double tol_l
   } else if (modBasic > 1) {
     np += 2 * k * (k - 1);
   }
-  double aic = -2 * lk + 2 * np;
-  double bic = -2 * lk + np * log(n);
+  double aic = -2 * LogLik + 2 * np;
+  double bic = -2 * LogLik + np * log(n);
   
   if (arma::any(yv != 1)) {
     for (int t = 0; t < TT; t++) {
@@ -634,7 +634,7 @@ Rcpp::List HMcat_LastME_step (arma::cube S, arma::colvec yv, int k, double tol_l
     }
   }
   
-  return Rcpp::List::create(Rcpp::Named("lk") = lk,
+  return Rcpp::List::create(Rcpp::Named("LogLik") = LogLik,
                             Rcpp::Named("piv") = piv,
                             Rcpp::Named("Pi") = Pi,
                             Rcpp::Named("Phi") = Phi,

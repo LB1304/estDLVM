@@ -103,39 +103,27 @@ Rcpp::List HMcont_ComputeLogLik(arma::cube S, arma::rowvec piv, arma::cube Pi, a
 
 
 // [[Rcpp::export]]
-bool HMcont_CheckConvergence (double lk, double lk_old, arma::rowvec piv, arma::cube Pi, arma::mat Mu, arma::mat Si, arma::rowvec piv_old, arma::cube Pi_old, arma::mat Mu_old, arma::mat Si_old, int it, double tol_lk, double tol_theta, int maxit) {
+bool HMcont_CheckConvergence (double LogLik, double lk_old, arma::rowvec piv, arma::cube Pi, arma::rowvec piv_old, arma::cube Pi_old, int it, double tol_lk, double tol_theta, int maxit) {
   int piv_dim = piv.n_elem;
   int Pi_dim = Pi.n_elem;
-  //int Mu_dim = Mu.n_elem;
-  //int Si_dim = Si.n_elem;
   int theta_dim = piv_dim + Pi_dim;
-  //int theta_dim = piv_dim + Pi_dim + Mu_dim + Si_dim;
 
   arma::colvec Pi_vec(Pi.memptr(), Pi_dim, false);
-  //arma::colvec Mu_vec(Mu.memptr(), Mu_dim, false);
-  //arma::colvec Si_vec(Si.memptr(), Si_dim, false);
   arma::colvec theta(theta_dim);
   theta.subvec(0, piv_dim-1) = arma::conv_to<arma::colvec>::from(piv);
   theta.subvec(piv_dim, piv_dim+Pi_dim-1) = Pi_vec;
-  //theta.subvec(piv_dim+Pi_dim, piv_dim+Pi_dim+Mu_dim-1) = Mu_vec;
-  //theta.subvec(piv_dim+Pi_dim+Mu_dim, piv_dim+Pi_dim+Mu_dim+Si_dim-1) = Si_vec;
 
   arma::colvec Pi_old_vec(Pi_old.memptr(), Pi_dim, false);
-  //arma::colvec Mu_old_vec(Mu_old.memptr(), Mu_dim, false);
-  //arma::colvec Si_old_vec(Si_old.memptr(), Si_dim, false);
   arma::colvec theta_old(theta_dim);
   theta_old.subvec(0, piv_dim-1) = arma::conv_to<arma::colvec>::from(piv_old);
   theta_old.subvec(piv_dim, piv_dim+Pi_dim-1) = Pi_old_vec;
-  //theta_old.subvec(piv_dim+Pi_dim, piv_dim+Pi_dim+Mu_dim-1) = Mu_old_vec;
-  //theta_old.subvec(piv_dim+Pi_dim+Mu_dim, piv_dim+Pi_dim+Mu_dim+Si_dim-1) = Si_old_vec;
 
-  bool lk_conv = (abs(lk - lk_old)/abs(lk_old) < tol_lk);
+  bool lk_conv = (abs(LogLik - lk_old)/abs(lk_old) < tol_lk);
   bool theta_conv = (arma::max(arma::abs(theta - theta_old)) < tol_theta);
   bool maxit_reached = (it > maxit-1);
   bool minit_done = (it > 2);
 
   bool alt = (maxit_reached + (theta_conv && lk_conv)) && minit_done;
-  //bool alt = (maxit_reached + lk_conv) && minit_done;
 
   return alt;
 }
@@ -305,9 +293,9 @@ Rcpp::List HMcont_EM(arma::cube S, int k, double tol_lk, double tol_theta, int m
   arma::rowvec piv_old; arma::cube Pi_old; arma::mat Mu_old; arma::mat Si_old;
   
   Rcpp::List llk_list = HMcont_ComputeLogLik(S, piv, Pi, Mu, Si);
-  double lk = llk_list["LogLik"];
+  double LogLik = llk_list["LogLik"];
   double lk_old;
-  arma::rowvec lkv(maxit);
+  arma::rowvec LogLik_vec(maxit);
   int it = 0;
   bool alt = false;
 
@@ -332,12 +320,12 @@ Rcpp::List HMcont_EM(arma::cube S, int k, double tol_lk, double tol_theta, int m
     Rcpp::NumericVector V_aux = E_list["V"];
     V = arma::cube(V_aux.begin(), n, k, TT, false);
     
-    lk_old = lk;
+    lk_old = LogLik;
     llk_list = HMcont_ComputeLogLik(S, piv, Pi, Mu, Si);
-    lk = llk_list["LogLik"];
-    lkv(it) = lk;
+    LogLik = llk_list["LogLik"];
+    LogLik_vec(it) = LogLik;
     it++;
-    alt = HMcont_CheckConvergence(lk, lk_old, piv, Pi, Mu, Si, piv_old, Pi_old, Mu_old, Si_old, it, tol_lk, tol_theta, maxit);
+    alt = HMcont_CheckConvergence(LogLik, lk_old, piv, Pi, piv_old, Pi_old, it, tol_lk, tol_theta, maxit);
   }
   
   int np = (k - 1) + k * r + r * (r + 1)/2;
@@ -347,11 +335,11 @@ Rcpp::List HMcont_EM(arma::cube S, int k, double tol_lk, double tol_theta, int m
     np += k * (k - 1);
   }
     
-  double aic = -2 * lk + np * 2;
-  double bic = -2 * lk + np * log(n);
+  double aic = -2 * LogLik + np * 2;
+  double bic = -2 * LogLik + np * log(n);
   
-  return Rcpp::List::create(Rcpp::Named("lk") = lk,
-                            Rcpp::Named("lkv") = lkv.head(it),
+  return Rcpp::List::create(Rcpp::Named("LogLik") = LogLik,
+                            Rcpp::Named("LogLik_vec") = LogLik_vec.head(it),
                             Rcpp::Named("it") = it,
                             Rcpp::Named("piv") = piv,
                             Rcpp::Named("Pi") = Pi,
@@ -372,9 +360,9 @@ Rcpp::List HMcont_TEM(arma::cube S, int k, double tol_lk, double tol_theta, int 
   arma::rowvec piv_old; arma::cube Pi_old; arma::mat Mu_old; arma::mat Si_old;
   
   Rcpp::List llk_list = HMcont_ComputeLogLik(S, piv, Pi, Mu, Si);
-  double lk = llk_list["LogLik"];
+  double LogLik = llk_list["LogLik"];
   double lk_old;
-  arma::rowvec lkv(maxit);
+  arma::rowvec LogLik_vec(maxit);
   int it = 0;
   bool alt = false;
   
@@ -400,12 +388,12 @@ Rcpp::List HMcont_TEM(arma::cube S, int k, double tol_lk, double tol_theta, int 
     Rcpp::NumericVector V_aux = tE_list["V"];
     V = arma::cube(V_aux.begin(), n, k, TT, false);
   
-    lk_old = lk;
+    lk_old = LogLik;
     llk_list = HMcont_ComputeLogLik(S, piv, Pi, Mu, Si);
-    lk = llk_list["LogLik"];
-    lkv(it) = lk;
+    LogLik = llk_list["LogLik"];
+    LogLik_vec(it) = LogLik;
     it++;
-    alt = HMcont_CheckConvergence(lk, lk_old, piv, Pi, Mu, Si, piv_old, Pi_old, Mu_old, Si_old, it, tol_lk, tol_theta, maxit-1);
+    alt = HMcont_CheckConvergence(LogLik, lk_old, piv, Pi, piv_old, Pi_old, it, tol_lk, tol_theta, maxit-1);
   }
 
   Rcpp::List E_list = HMcont_E_step(n, TT, k, llk_list, Pi);
@@ -421,10 +409,10 @@ Rcpp::List HMcont_TEM(arma::cube S, int k, double tol_lk, double tol_theta, int 
   Rcpp::NumericVector V_aux = E_list["V"];
   V = arma::cube(V_aux.begin(), n, k, TT, false);
   
-  lk_old = lk;
+  lk_old = LogLik;
   llk_list = HMcont_ComputeLogLik(S, piv, Pi, Mu, Si);
-  lk = llk_list["LogLik"];
-  lkv(it) = lk;
+  LogLik = llk_list["LogLik"];
+  LogLik_vec(it) = LogLik;
   it++;
   
   int np = (k - 1) + k * r + r * (r + 1)/2;
@@ -434,11 +422,11 @@ Rcpp::List HMcont_TEM(arma::cube S, int k, double tol_lk, double tol_theta, int 
     np += k * (k - 1);
   }
   
-  double aic = -2 * lk + np * 2;
-  double bic = -2 * lk + np * log(n);
+  double aic = -2 * LogLik + np * 2;
+  double bic = -2 * LogLik + np * log(n);
 
-  return Rcpp::List::create(Rcpp::Named("lk") = lk,
-                            Rcpp::Named("lkv") = lkv.head(it),
+  return Rcpp::List::create(Rcpp::Named("LogLik") = LogLik,
+                            Rcpp::Named("LogLik_vec") = LogLik_vec.head(it),
                             Rcpp::Named("it") = it,
                             Rcpp::Named("piv") = piv,
                             Rcpp::Named("Pi") = Pi,
@@ -541,12 +529,12 @@ Rcpp::List HMcont_ME_step(arma::cube S, int k, double tol_lk, double tol_theta, 
   arma::cube Pi(k, k, TT, arma::fill::zeros); arma::cube Pi_old(k, k, TT);
   arma::mat Mu(r, k, arma::fill::zeros); arma::mat Mu_old(r, k);
   arma::mat Si(r, r, arma::fill::zeros); arma::mat Si_old(r, r);
-  double lk = 0; double lk_old;
+  double LogLik = 0; double lk_old;
   int it = 0;
   bool alt = false;
     
   while (!alt) {
-    lk_old = lk; piv_old = piv; Pi_old = Pi; Mu_old = Mu; Si_old = Si;
+    lk_old = LogLik; piv_old = piv; Pi_old = Pi; Mu_old = Mu; Si_old = Si;
     
     Rcpp::List M_list = HMcont_M_step(Sv, n, r, TT, k, P, modBasic);
     Rcpp::NumericMatrix piv_aux = M_list["piv"];
@@ -558,7 +546,7 @@ Rcpp::List HMcont_ME_step(arma::cube S, int k, double tol_lk, double tol_theta, 
     Rcpp::NumericMatrix Si_aux = M_list["Si"];
     Si = arma::mat(Si_aux.begin(), r, r, false);
     Rcpp::List llk_list = HMcont_ComputeLogLik(S, piv, Pi, Mu, Si);
-    lk = llk_list["LogLik"];
+    LogLik = llk_list["LogLik"];
     Rcpp::List E_list = HMcont_E_step(n, TT, k, llk_list, Pi);
     Rcpp::NumericVector V_aux = E_list["V"];
     V = arma::cube(V_aux.begin(), n, k, TT, false);
@@ -567,12 +555,12 @@ Rcpp::List HMcont_ME_step(arma::cube S, int k, double tol_lk, double tol_theta, 
     P["V"] = V; P["U"] = U;
 
     it++;
-    alt = HMcont_CheckConvergence(lk, lk_old, piv, Pi, Mu, Si, piv_old, Pi_old, Mu_old, Si_old, it, tol_lk, tol_theta, maxit);
+    alt = HMcont_CheckConvergence(LogLik, lk_old, piv, Pi, piv_old, Pi_old, it, tol_lk, tol_theta, maxit);
   }
 
   return Rcpp::List::create(Rcpp::Named("V") = V,
                             Rcpp::Named("U") = U,
-                            Rcpp::Named("fit") = lk);
+                            Rcpp::Named("fit") = LogLik);
 }
 
 
@@ -590,12 +578,12 @@ Rcpp::List HMcont_LastME_step (arma::cube S, int k, double tol_lk, double tol_th
   arma::cube Pi(k, k, TT, arma::fill::zeros); arma::cube Pi_old(k, k, TT);
   arma::mat Mu(r, k, arma::fill::zeros); arma::mat Mu_old(r, k);
   arma::mat Si(r, r, arma::fill::zeros); arma::mat Si_old(r, r);
-  double lk = 0; double lk_old;
+  double LogLik = 0; double lk_old;
   int it = 0;
   bool alt = false;
   
   while (!alt) {
-    lk_old = lk; piv_old = piv; Pi_old = Pi; Mu_old = Mu; Si_old = Si;
+    lk_old = LogLik; piv_old = piv; Pi_old = Pi; Mu_old = Mu; Si_old = Si;
     
     Rcpp::List M_list = HMcont_M_step(Sv, n, r, TT, k, P, modBasic);
     Rcpp::NumericMatrix piv_aux = M_list["piv"];
@@ -607,7 +595,7 @@ Rcpp::List HMcont_LastME_step (arma::cube S, int k, double tol_lk, double tol_th
     Rcpp::NumericMatrix Si_aux = M_list["Si"];
     Si = arma::mat(Si_aux.begin(), r, r, false);
     Rcpp::List llk_list = HMcont_ComputeLogLik(S, piv, Pi, Mu, Si);
-    lk = llk_list["LogLik"];
+    LogLik = llk_list["LogLik"];
     Rcpp::List E_list = HMcont_E_step(n, TT, k, llk_list, Pi);
     Rcpp::NumericVector V_aux = E_list["V"];
     V = arma::cube(V_aux.begin(), n, k, TT, false);
@@ -616,7 +604,7 @@ Rcpp::List HMcont_LastME_step (arma::cube S, int k, double tol_lk, double tol_th
     P["V"] = V; P["U"] = U;
     
     it++;
-    alt = HMcont_CheckConvergence(lk, lk_old, piv, Pi, Mu, Si, piv_old, Pi_old, Mu_old, Si_old, it, tol_lk, tol_theta, maxit);
+    alt = HMcont_CheckConvergence(LogLik, lk_old, piv, Pi, piv_old, Pi_old, it, tol_lk, tol_theta, maxit);
   }
   
   // Last M Step
@@ -630,7 +618,7 @@ Rcpp::List HMcont_LastME_step (arma::cube S, int k, double tol_lk, double tol_th
   Rcpp::NumericMatrix Si_aux = M_list["Si"];
   Si = arma::mat(Si_aux.begin(), r, r, false);
   Rcpp::List llk_list = HMcont_ComputeLogLik(S, piv, Pi, Mu, Si);
-  lk = llk_list["LogLik"];
+  LogLik = llk_list["LogLik"];
   
   int np = (k - 1) + k * r + r * (r + 1)/2;
   if (modBasic == 0) {
@@ -639,10 +627,10 @@ Rcpp::List HMcont_LastME_step (arma::cube S, int k, double tol_lk, double tol_th
     np += k * (k - 1);
   }
   
-  double aic = -2 * lk + np * 2;
-  double bic = -2 * lk + np * log(n);
+  double aic = -2 * LogLik + np * 2;
+  double bic = -2 * LogLik + np * log(n);
   
-  return Rcpp::List::create(Rcpp::Named("lk") = lk,
+  return Rcpp::List::create(Rcpp::Named("LogLik") = LogLik,
                             Rcpp::Named("it") = it,
                             Rcpp::Named("piv") = piv,
                             Rcpp::Named("Pi") = Pi,

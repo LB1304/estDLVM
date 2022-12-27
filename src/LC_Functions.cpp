@@ -41,7 +41,7 @@ double LC_Temperature (int h, int profile, Rcpp::List profile_pars) {
 
 
 // [[Rcpp::export]]
-bool LC_CheckConvergence (double lk, double lk_old, arma::rowvec piv, arma::cube Phi, arma::rowvec piv_old, arma::cube Phi_old, int it, double tol_lk, double tol_theta, int maxit) {
+bool LC_CheckConvergence (double LogLik, double LogLik_old, arma::rowvec piv, arma::cube Phi, arma::rowvec piv_old, arma::cube Phi_old, int it, double tol_lk, double tol_theta, int maxit) {
   int piv_dim = piv.n_elem;
   int Phi_dim = Phi.n_elem;
   int theta_dim = piv_dim + Phi_dim;
@@ -56,12 +56,12 @@ bool LC_CheckConvergence (double lk, double lk_old, arma::rowvec piv, arma::cube
   theta_old.subvec(0, piv_dim-1) = arma::conv_to<arma::colvec>::from(piv_old);
   theta_old.subvec(piv_dim, piv_dim+Phi_dim-1) = Phi_old_vec;
   
-  bool lk_conv = (abs(lk - lk_old)/abs(lk_old) < tol_lk);
+  bool LogLik_conv = (abs(LogLik - LogLik_old)/abs(LogLik_old) < tol_lk);
   bool theta_conv = (arma::max(arma::abs(theta - theta_old)) < tol_theta);
   bool maxit_reached = (it > maxit-1);
   bool minit_done = (it > 2);
   
-  bool alt = (maxit_reached + (theta_conv && lk_conv)) && minit_done;
+  bool alt = (maxit_reached + (theta_conv && LogLik_conv)) && minit_done;
   
   return alt;
 }
@@ -163,9 +163,9 @@ Rcpp::List LC_TEM_step(arma::mat S, arma::colvec yv, int C, int ns, int r, int n
 Rcpp::List LC_EM(arma::mat S, arma::colvec yv, int k, double tol_lk, double tol_theta, int maxit, arma::rowvec piv, arma::mat Piv, arma::mat Psi, arma::cube Phi) {
   arma::rowvec piv_old; arma::mat Piv_old; arma::cube Phi_old; arma::mat Psi_old;
   
-  double lk = arma::accu(yv % log(arma::sum(Psi % Piv, 1)));
-  double lk_old;
-  arma::rowvec lkv(maxit);
+  double LogLik = arma::accu(yv % log(arma::sum(Psi % Piv, 1)));
+  double LogLik_old;
+  arma::rowvec LogLik_vec(maxit);
   int it = 0;
   bool alt = false;
   
@@ -189,19 +189,19 @@ Rcpp::List LC_EM(arma::mat S, arma::colvec yv, int k, double tol_lk, double tol_
     Rcpp::NumericMatrix V_aux = EM_list["V"];
     V = arma::mat(V_aux.begin(), ns, k, false);
     
-    lk_old = lk;
-    lk = arma::accu(yv % log(arma::sum(Psi % Piv, 1)));
-    lkv(it) = lk;
+    LogLik_old = LogLik;
+    LogLik = arma::accu(yv % log(arma::sum(Psi % Piv, 1)));
+    LogLik_vec(it) = LogLik;
     it++;
-    alt = LC_CheckConvergence(lk, lk_old, piv, Phi, piv_old, Phi_old, it, tol_lk, tol_theta, maxit);
+    alt = LC_CheckConvergence(LogLik, LogLik_old, piv, Phi, piv_old, Phi_old, it, tol_lk, tol_theta, maxit);
   }
   
   int np = k * r * (C - 1) + k - 1;
-  double aic = -2 * lk + 2 * np;
-  double bic = -2 * lk + np * log(n);
+  double aic = -2 * LogLik + 2 * np;
+  double bic = -2 * LogLik + np * log(n);
   
-  return Rcpp::List::create(Rcpp::Named("lk") = lk, 
-                            Rcpp::Named("lkv") = lkv.head(it), 
+  return Rcpp::List::create(Rcpp::Named("LogLik") = LogLik, 
+                            Rcpp::Named("LogLik_vec") = LogLik_vec.head(it), 
                             Rcpp::Named("it") = it, 
                             Rcpp::Named("piv") = piv, 
                             Rcpp::Named("Piv") = Piv, 
@@ -220,9 +220,9 @@ Rcpp::List LC_EM(arma::mat S, arma::colvec yv, int k, double tol_lk, double tol_
 Rcpp::List LC_TEM(arma::mat S, arma::colvec yv, int k, double tol_lk, double tol_theta, int maxit, arma::rowvec piv, arma::mat Piv, arma::mat Psi, arma::cube Phi, int profile, Rcpp::List profile_pars) {
   arma::rowvec piv_old; arma::mat Piv_old; arma::cube Phi_old; arma::mat Psi_old;
   
-  double lk = arma::accu(yv % log(arma::sum(Psi % Piv, 1)));
-  double lk_old;
-  arma::rowvec lkv(maxit+1);
+  double LogLik = arma::accu(yv % log(arma::sum(Psi % Piv, 1)));
+  double LogLik_old;
+  arma::rowvec LogLik_vec(maxit+1);
   int it = 0;
   bool alt = false;
   
@@ -246,11 +246,11 @@ Rcpp::List LC_TEM(arma::mat S, arma::colvec yv, int k, double tol_lk, double tol
     Rcpp::NumericVector Phi_aux = res_tem_step["Phi"];
     Phi = arma::cube(Phi_aux.begin(), C, r, k, false);
     
-    lk_old = lk;
-    lk = arma::accu(yv % log(arma::sum(Psi % Piv, 1)));
-    lkv(it) = lk;
+    LogLik_old = LogLik;
+    LogLik = arma::accu(yv % log(arma::sum(Psi % Piv, 1)));
+    LogLik_vec(it) = LogLik;
     it++;
-    alt = LC_CheckConvergence(lk, lk_old, piv, Phi, piv_old, Phi_old, it, tol_lk, tol_theta, maxit-1);
+    alt = LC_CheckConvergence(LogLik, LogLik_old, piv, Phi, piv_old, Phi_old, it, tol_lk, tol_theta, maxit-1);
   }
   
   Rcpp::List res_em_step = LC_EM_step(S, yv, C, ns, r, n,  k, piv, Piv, Psi, Phi);
@@ -263,17 +263,17 @@ Rcpp::List LC_TEM(arma::mat S, arma::colvec yv, int k, double tol_lk, double tol
   Rcpp::NumericVector Phi_aux = res_em_step["Phi"];
   Phi = arma::cube(Phi_aux.begin(), C, r, k, false);
   
-  lk_old = lk;
-  lk = arma::accu(yv % log(arma::sum(Psi % Piv, 1)));
-  lkv(it) = lk;
+  LogLik_old = LogLik;
+  LogLik = arma::accu(yv % log(arma::sum(Psi % Piv, 1)));
+  LogLik_vec(it) = LogLik;
   it++;
   
   int np = k * r * (C - 1) + k - 1;
-  double aic = -2 * lk + 2 * np;
-  double bic = -2 * lk + np * log(n);
+  double aic = -2 * LogLik + 2 * np;
+  double bic = -2 * LogLik + np * log(n);
   
-  return Rcpp::List::create(Rcpp::Named("lk") = lk,
-                            Rcpp::Named("lkv") = lkv.head(it),
+  return Rcpp::List::create(Rcpp::Named("LogLik") = LogLik,
+                            Rcpp::Named("LogLik_vec") = LogLik_vec.head(it),
                             Rcpp::Named("it") = it,
                             Rcpp::Named("piv") = piv,
                             Rcpp::Named("Piv") = Piv,
@@ -341,12 +341,12 @@ Rcpp::List LC_ME_step (arma::mat S, arma::colvec yv, int ns, int n, int r, int C
   arma::mat Piv(ns, k, arma::fill::zeros); arma::mat Piv_old(ns, k);
   arma::cube Phi(C, r, k, arma::fill::zeros); arma::cube Phi_old(C, r, k);
   arma::mat Psi(ns, k, arma::fill::zeros); arma::mat Psi_old(ns, k);
-  double lk = 0; double lk_old;
+  double LogLik = 0; double LogLik_old;
   int it = 0;
   bool alt = false;
   
   while (!alt) {
-    lk_old = lk; piv_old = piv; Piv_old = Piv; Phi_old = Phi; Psi_old = Psi;
+    LogLik_old = LogLik; piv_old = piv; Piv_old = Piv; Phi_old = Phi; Psi_old = Psi;
     
     arma::rowvec b = arma::sum(V, 0);
     piv = b/n;
@@ -381,13 +381,13 @@ Rcpp::List LC_ME_step (arma::mat S, arma::colvec yv, int ns, int n, int r, int C
     arma::mat freq = yv * ones_k;
     V = freq % (Num/Den);
     
-    lk = arma::accu(yv % log(arma::sum(Psi % Piv, 1)));
+    LogLik = arma::accu(yv % log(arma::sum(Psi % Piv, 1)));
     it++;
-    alt = LC_CheckConvergence(lk, lk_old, piv, Phi, piv_old, Phi_old, it, tol_lk, tol_theta, maxit);
+    alt = LC_CheckConvergence(LogLik, LogLik_old, piv, Phi, piv_old, Phi_old, it, tol_lk, tol_theta, maxit);
   }
   
   return Rcpp::List::create(Rcpp::Named("V") = V, 
-                            Rcpp::Named("fit") = lk);
+                            Rcpp::Named("fit") = LogLik);
 }
 
 
@@ -401,12 +401,12 @@ Rcpp::List LC_LastME_step (arma::mat S, arma::colvec yv, int ns, int n, int r, i
   arma::mat Piv(ns, k, arma::fill::zeros); arma::mat Piv_old(ns, k);
   arma::cube Phi(C, r, k, arma::fill::zeros); arma::cube Phi_old(C, r, k);
   arma::mat Psi(ns, k, arma::fill::zeros); arma::mat Psi_old(ns, k);
-  double lk = 0; double lk_old;
+  double LogLik = 0; double LogLik_old;
   int it = 0;
   bool alt = false;
   
   while (!alt) {
-    lk_old = lk; piv_old = piv; Piv_old = Piv; Phi_old = Phi; Psi_old = Psi;
+    LogLik_old = LogLik; piv_old = piv; Piv_old = Piv; Phi_old = Phi; Psi_old = Psi;
     
     arma::rowvec b = arma::sum(V, 0);
     arma::rowvec piv = b/n;
@@ -442,9 +442,9 @@ Rcpp::List LC_LastME_step (arma::mat S, arma::colvec yv, int ns, int n, int r, i
     arma::mat freq = yv * ones_k;
     V = freq % (Num/Den);
     
-    lk = arma::accu(yv % log(arma::sum(Psi % Piv, 1)));
+    LogLik = arma::accu(yv % log(arma::sum(Psi % Piv, 1)));
     it++;
-    alt = LC_CheckConvergence(lk, lk_old, piv, Phi, piv_old, Phi_old, it, tol_lk, tol_theta, maxit);
+    alt = LC_CheckConvergence(LogLik, LogLik_old, piv, Phi, piv_old, Phi_old, it, tol_lk, tol_theta, maxit);
   }
   
   
@@ -477,13 +477,13 @@ Rcpp::List LC_LastME_step (arma::mat S, arma::colvec yv, int ns, int n, int r, i
     }
   }
   
-  lk = arma::accu(yv % log(arma::sum(Psi % Piv, 1)));
+  LogLik = arma::accu(yv % log(arma::sum(Psi % Piv, 1)));
   
   int np = k * r * (C - 1) + k - 1;
-  double aic = -2 * lk + 2 * np;
-  double bic = -2 * lk + np * log(n);
+  double aic = -2 * LogLik + 2 * np;
+  double bic = -2 * LogLik + np * log(n);
   
-  return Rcpp::List::create(Rcpp::Named("lk") = lk, 
+  return Rcpp::List::create(Rcpp::Named("LogLik") = LogLik, 
                             Rcpp::Named("piv") = piv,
                             Rcpp::Named("Piv") = Piv,  
                             Rcpp::Named("Phi") = Phi, 
