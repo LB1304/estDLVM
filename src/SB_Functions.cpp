@@ -253,8 +253,8 @@ Rcpp::List SB_VEM (arma::mat Y, int k, int n, double tol_lk, int maxit, int maxi
   double LogLik = SB_compute_LogLik(V, B, pi, Y, k, n);
   int n_B_par = bin_coeff(k+2-1, 2);
   int n_pi_par = k-1;
-  double ICL_B_par = 1/2 * arma::accu(n_B_par * log(bin_coeff(n, 2)));
-  double ICL_pi_par = 1/2 * n_pi_par * log(n);
+  double ICL_B_par = 0.5 * n_B_par * log(bin_coeff(n, 2));
+  double ICL_pi_par = 0.5 * n_pi_par * log(n);
   double ICL = LogLik - ICL_pi_par - ICL_B_par;
   
   return Rcpp::List::create(Rcpp::Named("LogLik") = LogLik,
@@ -286,7 +286,7 @@ Rcpp::List SB_VEM_Q1 (arma::mat Y, int k, int n) {
   }
   double LogLik = n_edges * log_B1 + (bin_coeff(n+2-1, 2) - n_edges) * log_B2;
   double J = n_edges * log_B1 + (bin_coeff(n+2-1, 2) - n_edges) * log_B2;
-  double ICL = LogLik - 1/2.0 * log(bin_coeff(n, 2));
+  double ICL = LogLik - 0.5 * log(bin_coeff(n, 2));
   
   return Rcpp::List::create(Rcpp::Named("pi") = pi,
                             Rcpp::Named("B") = B,
@@ -407,8 +407,8 @@ Rcpp::List SB_LastME_step (arma::mat Y, int n, arma::mat V, int k, int R, int ma
   double LogLik = SB_compute_LogLik(V, B, pi, Y, k, n);
   int n_B_par = bin_coeff(k+2-1, 2);
   int n_pi_par = k-1;
-  double ICL_B_par = 1/2.0 * n_B_par * log(bin_coeff(n, 2));
-  double ICL_pi_par = 1/2.0 * n_pi_par * log(n);
+  double ICL_B_par = 0.5 * n_B_par * log(bin_coeff(n, 2));
+  double ICL_pi_par = 0.5 * n_pi_par * log(n);
   double ICL = LogLik - ICL_pi_par - ICL_B_par;
   
   
