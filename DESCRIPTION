@@ -12,6 +12,7 @@ Imports:
   RcppParallel (>= 5.1.5), 
   RcppArmadillo (>= 0.11.0), 
   RcppAlgos (>= 2.5.3), 
-  ppclust (>= 1.1.0)
+  ppclust (>= 1.1.0),
+  phonTools
 LinkingTo: Rcpp, RcppArmadillo, RcppParallel
 SystemRequirements: GNU make
