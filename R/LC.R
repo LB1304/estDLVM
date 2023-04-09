@@ -1,4 +1,4 @@
-est_LC <- function (data, k, tol_lk = 1e-8, tol_theta = 1e-8, maxit = 1e3, sv = NULL, algorithm = c("EM", "TEM", "EEM"), 
+est_LC <- function (data, k, tol_lk = 1e-8, tol_theta = 1e-8, maxit = 1e3, sv = NULL, useFreq = TRUE, algorithm = c("EM", "TEM", "EEM"), 
                     temperingOptions = list(profile = NULL, alpha = NULL, beta = NULL, rho = NULL, T0 = NULL),
                     evolutionaryOptions = list(n_parents = NULL, n_children = NULL, prob_mut = NULL, R = NULL)) {
   
