@@ -26,7 +26,7 @@ est_LC(data, k, tol_lk = 1e-8, tol_theta = 1e-8, maxit = 1e3, sv = NULL, algorit
   \item{piv}{Estimated vector of weights of the latent classes}
   \item{Phi}{Array of the conditional response probabilities for every item and latent class}
   \item{k}{Number of latent components}
-  \item{np}{Total number of estimated parameters}
+  \item{N_par}{Total number of estimated parameters}
   \item{V}{Matrix of the posterior probabilities for each response configuration and latent class}
   \item{aic}{Value of the Akaike Information Criterion for model selection}
   \item{bic}{Value of the Bayesian Information Criterion for model selection}
