@@ -61,7 +61,7 @@ tmp <- est_HMcont(data = Y, index = c("id", "time"), k = 3, modBasic = 0, algori
                   temperingOptions = list(profile = 2, beta = 0.8, alpha = 1))
 
 ## Evolutionary EM algorithm
-evo <- est_HMcont(data = Y, index = c("id", "time"), k = 3, modBasic = 0, 
+evo <- est_HMcont(data = Y, index = c("id", "time"), k = 3, modBasic = 0, algorithm = "EEM", 
                  evolutionaryOptions = list(n_parents = 5, n_children = 10, prob_mut = 0.02, R = 10))
 }
 \author{Luca Brusa, Fulvia Pennoni, Francesco Bartolucci}
