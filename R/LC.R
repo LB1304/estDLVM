@@ -10,6 +10,13 @@ est_LC <- function (data, k, tol_lk = 1e-8, tol_theta = 1e-8, maxit = 1e3, sv = 
   } else {
     stop("Provide data in one of the supported format.")
   }
+
+  if (k == 1) {
+    out <- LC_k1(S = S, yv = yv)
+    out$V <- out$V/yv
+    out$call <- match.call()
+    return(out)
+  }
   
   # Starting Values
   if (is.null(sv)) {
@@ -44,7 +51,8 @@ est_LC <- function (data, k, tol_lk = 1e-8, tol_theta = 1e-8, maxit = 1e3, sv = 
   } else {
     stop("Specify an available algorithm.")
   }
-  
+
+  out$V <- out$V/yv
   out$call <- match.call()
   return(out)
 }
