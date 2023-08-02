@@ -1,24 +1,15 @@
-est_LC <- function (data, k, tol_lk = 1e-8, tol_theta = 1e-8, maxit = 1e3, sv = NULL, useFreq = TRUE, algorithm = c("EM", "TEM", "EEM"), 
+est_LC <- function (data, k, tol_lk = 1e-8, tol_theta = 1e-8, maxit = 1e3, sv = NULL, algorithm = c("EM", "TEM", "EEM"), 
                     temperingOptions = list(profile = NULL, alpha = NULL, beta = NULL, rho = NULL, T0 = NULL),
                     evolutionaryOptions = list(n_parents = NULL, n_children = NULL, prob_mut = NULL, R = NULL)) {
   
-  if (useFreq) {
-    if (is.data.frame(data) | is.matrix(data)) {
-      data <- as.matrix(data)
-      tmp = aggr_data(data)
-      S <- tmp$S
-      yv <- tmp$freq
-    } else if (is.list(data) | identical(names(data), c("S", "yv"))) {
-      S <- data$S
-      yv <- data$yv
-    } else {
-      stop("Provide data in one of the supported format.")
-    }
+  if (is.data.frame(data) | is.matrix(data)) {
+    data <- as.matrix(data)
+    tmp = aggr_data(data)
+    S <- tmp$S
+    yv <- tmp$freq
   } else {
-    S <- data
-    yv <- rep(1, nrow(data))
+    stop("Provide data in one of the supported format.")
   }
-  
   
   # Starting Values
   if (is.null(sv)) {
