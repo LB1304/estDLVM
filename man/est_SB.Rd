@@ -45,10 +45,10 @@ sample <- SB_sample(n, piv, B)
 Y <- sample$Y
 
 ## Standard VEM algorithm
-std <- est_SB(data = Y, k = k, algorithm = "VEM")
+std <- est_SB(data = Y, k = 3, algorithm = "VEM")
 
 ## Evolutionary VEM algorithm
-evo <- est_SB(data = Y, k = k, algorithm = "EVEM", 
+evo <- est_SB(data = Y, k = 3, algorithm = "EVEM", 
               evolutionaryOptions = list(n_parents = 5, n_children = 10, prob_mut = 0.02, R = 10))
 }
 \author{Luca Brusa, Fulvia Pennoni, Francesco Bartolucci}
