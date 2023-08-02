@@ -20,7 +20,7 @@ est_SB <- function (data, k, tol_lk = 1e-8, tol_theta = 1e-8, maxit = 1e3, maxit
   
   # VEM/EVEM algorithms
   if (algorithm == "VEM") {
-    out <- SB_VEM(Y = Y, k = k, tol_lk = tol_lk, tol_theta = tol_theta, maxit = maxit, maxit_FP = maxit_FP, V = sv)
+    out <- SB_VEM(Y = Y, k = k, tol_lk = tol_lk, tol_theta = tol_theta, maxit = maxit, maxit_FP = maxit_FP, V = sv[[1]])
   } else if (algorithm == "EVEM") {
     evolutionaryOptions[sapply(evolutionaryOptions, is.null)] <- NULL
     if (length(evolutionaryOptions) != 4) {
