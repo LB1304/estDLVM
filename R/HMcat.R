@@ -10,16 +10,19 @@ est_HMcat <- function (data, index, k, modBasic, tol_lk = 1e-8, tol_theta = 1e-8
     tv <- data[, tv.which]
     Y <- data[, -c(id.which, tv.which), drop = FALSE]
     Y_names <- colnames(Y)
-    
     tmp <- HMcat_long2matrices(Y = Y, id = id, time = tv)
     S <- tmp$S
     dimnames(S)[[3]] <- Y_names
     yv = tmp$freq
-  } else if (is.list(data) | identical(names(data), c("S", "yv"))) {
-    S <- data$S
-    yv <- data$yv
   } else {
     stop("Provide data in one of the supported format.")
+  }
+  
+  if (k == 1) {
+    out <- HMcat_k1(S = S, yv = yv, modBasic = modBasic)
+    out$V <- out$V/yv
+    out$call <- match.call()
+    return(out)
   }
   
   # Starting Values
@@ -40,7 +43,6 @@ est_HMcat <- function (data, index, k, modBasic, tol_lk = 1e-8, tol_theta = 1e-8
     }
     out <- HMcat_TEM(S = S, yv = yv, k = k, tol_lk = tol_lk, tol_theta = tol_theta, maxit = maxit, piv = sv$piv, Pi = sv$Pi, Phi = sv$Phi, modBasic = modBasic, 
                   profile = profile, profile_pars = profile_pars)
-    out$temperingOptions <- temperingOptions
   } else if (algorithm == "EEM") {
     evolutionaryOptions[sapply(evolutionaryOptions, is.null)] <- NULL
     if (length(evolutionaryOptions) != 4) {
@@ -53,10 +55,10 @@ est_HMcat <- function (data, index, k, modBasic, tol_lk = 1e-8, tol_theta = 1e-8
     }
     out <- HMcat_EEM(S = S, yv = yv, k = k, tol_lk = tol_lk, tol_theta = tol_theta, maxit = maxit, modBasic = modBasic, 
                      n_parents = n_parents, n_children = n_children, prob_mut = prob_mut, R = R)
-    out$evolutionaryOptions <- evolutionaryOptions
   } else {
     stop("Specify an available algorithm.")
   }
-  
+
+  out$call <- match.call()
   return(out)
 }
