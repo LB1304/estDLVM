@@ -4,8 +4,10 @@ Title: Discrete latent variable models estimation through different versions of 
 Version: 1.0
 Date: 2022-08-22
 Authors@R: c(
-  person("Luca", "Brusa", email = "luca.brusa@unimib.it", role = c("cre", "aut")))
-Description: The estDLVM package provides functions to perform maximum likelihood estimation in the field of discrete latent variable models. Three different variants of the Expectation-Maximization algorithm are implemented (standard, tempered, and evolutionary), and many models are taken into account (Latent Class, Hidden Markov, and Stochastic Block models).
+  person("Luca", "Brusa", email = "luca.brusa@unimib.it", role = c("cre", "aut")),
+  person("Fulvia", "Pennoni"),
+  person("Francesco", "Bartolucci"))
+Description: The estDLVM package provides functions to perform maximum likelihood and approximate maximum likelihood estimation in the context of discrete latent variable models. For the latent class and hidden Markov models three versions of the expectation-maximization algorithm are implemented: standard (EM), tempered (TEM), and evolutionary (EEM). For the stochastic block model two versions of the variational expectation-maximization algorithm are implemented: standard (VEM) and evolutionary (EVEM).
 License: GPL-3
 Imports: 
   Rcpp (>= 1.0.8),
