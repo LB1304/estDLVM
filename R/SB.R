@@ -38,5 +38,6 @@ est_SB <- function (data, k, tol_lk = 1e-8, tol_theta = 1e-8, maxit = 1e3, maxit
   }
   
   out$call <- match.call()
+  class(out) <- "SB"
   return(out)
 }
