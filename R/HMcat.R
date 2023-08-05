@@ -61,5 +61,6 @@ est_HMcat <- function (data, index, k, modBasic, tol_lk = 1e-8, tol_theta = 1e-8
   
   out$call <- match.call()
   out$V <- out$V/yv
+  class(out) <- "HMcat"
   return(out)
 }
