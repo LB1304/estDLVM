@@ -46,15 +46,15 @@ sample <- LC_sample(n, piv, Phi)
 Y <- sample$Y
 
 ## Standard EM algorithm
-std <- est_LC(data = Y, k = 3, algorithm = "EM")
+stdLC <- est_LC(data = Y, k = 3, algorithm = "EM")
 
 ## Tempered EM algorithm
-tmp <- est_LC(data = Y, k = 3, algorithm = "TEM", 
-              temperingOptions = list(profile = 3, alpha = 0.8, beta = 20, rho = 90, T0 = 10))
+tmpLC <- est_LC(data = Y, k = 3, algorithm = "TEM", 
+                temperingOptions = list(profile = 3, alpha = 0.8, beta = 20, rho = 90, T0 = 10))
 
 ## Evolutionary EM algorithm
-evo <- est_LC(data = Y, k = 3, algorithm = "EEM", 
-              evolutionaryOptions = list(n_parents = 5, n_children = 10, prob_mut = 0.02, R = 10))
+evoLC <- est_LC(data = Y, k = 3, algorithm = "EEM", 
+                evolutionaryOptions = list(n_parents = 5, n_children = 10, prob_mut = 0.02, R = 10))
 }
 \author{Luca Brusa, Fulvia Pennoni, Francesco Bartolucci}
 
