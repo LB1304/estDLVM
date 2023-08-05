@@ -15,8 +15,8 @@ double LC_Temperature (int h, int profile, Rcpp::List profile_pars) {
   
   if (profile == 1) {
     double T0 = profile_pars["T0"];
-    double rho = profile_pars["rho"];
-    temp = T0 * pow(rho, h-1);
+    double alpha = profile_pars["alpha"];
+    temp = T0 * pow(alpha, h-1);
   } else if (profile == 2) {
     double alpha = profile_pars["alpha"];
     double beta = profile_pars["beta"];
