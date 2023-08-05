@@ -18,8 +18,8 @@ est_HMcont(data, index, k, modBasic, tol_lk = 1e-8, tol_theta = 1e-8, maxit = 1e
   \item{maxit}{Maximum number of iterations for the EM algorithms}
   \item{sv}{Starting value for the EM algorithms; default is \code{NULL}}
   \item{algorithm}{Version of the EM algorithm employed: \code{"EM"} for the standard EM, \code{"TEM"} for the tempered EM, and \code{"EEM"} for the evolutionary EM algorithms}
-  \item{temperingOptions}{A list containing the options for the tempered EM algorithm: type of tempering profile (), and values for the tempering constants}
-  \item{evolutionaryOptions}{A list containing the options for the evolutionary EM algorithm: number of parents (\code{n_parents}), and number of children (\code{n_children}), probability of mutation (\code{prob_mut}), and number of steps for the EM algorihm during the evolution (\code{R})}
+  \item{temperingOptions}{A list containing the options for the tempered EM algorithm (see the \emph{Details} section)}
+  \item{evolutionaryOptions}{A list containing the options for the evolutionary EM algorithm (see the \emph{Details} section)}
 }
 \details{
 The list \code{temperingOptions} contains the tempering constants used to optimally set the TEM algorithm: 
