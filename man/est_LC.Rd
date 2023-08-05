@@ -33,6 +33,7 @@ The list \code{temperingOptions} contains the tempering constants used to optima
   }
   \item \code{alpha}, \code{beta}, \code{rho}, and \code{T0} define the tempering constants \eqn{\alpha}, \eqn{\beta}, \eqn{\rho}, \eqn{\tau_0}, respectively.
 }
+
 The list \code{evolutionaryOptions} contains the evolutionary constants used to optimally set the EEM algorithm:
 \itemize{
   \item \code{n_parents} number of parents;
