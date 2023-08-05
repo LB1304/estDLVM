@@ -18,6 +18,15 @@ est_SB(data, k, tol_lk = 1e-8, tol_theta = 1e-8, maxit = 1e3, maxit_FP = 500, sv
   \item{algorithm}{Version of the VEM algorithm employed: \code{"VEM"} for the standard VEM and \code{"EVEM"} for the evolutionary VEM algorithms}
   \item{evolutionaryOptions}{A list containing the options for the evolutionary VEM algorithm: number of parents (\code{n_parents}), and number of children (\code{n_children}), probability of mutation (\code{prob_mut}), and number of steps for the EM algorihm during the evolution (\code{R})}
 }
+\details{
+The list \code{evolutionaryOptions} contains the evolutionary constants used to optimally set the EVEM algorithm:
+\itemize{
+  \item \code{n_parents} number of parents;
+  \item \code{n_children} number of offspring;
+  \item \code{prob_mut} probability to perform mutation;
+  \item \code{R} number of cycles of the standard VEM algorithm in each update step.
+}
+}
 \value{
   \item{LogLik}{Maximum log-likelihood function at convergence of the VEM algorithm}
   \item{J}{Maximum ELBO function at convergence of the VEM algorithm}
