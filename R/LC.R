@@ -54,5 +54,6 @@ est_LC <- function (data, k, tol_lk = 1e-8, tol_theta = 1e-8, maxit = 1e3, sv = 
   
   out$V <- out$V/yv
   out$call <- match.call()
+  class(out) <- "LC"
   return(out)
 }
