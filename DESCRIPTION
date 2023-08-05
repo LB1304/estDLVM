@@ -1,6 +1,6 @@
 Package: estDLVM
 Type: Package
-Title: Discrete latent variable models estimation through different versions of the EM algorithm
+Title: Discrete latent variable models estimation through different versions of the EM and the VEM algorithms
 Version: 1.0
 Date: 2022-08-22
 Authors@R: c(
