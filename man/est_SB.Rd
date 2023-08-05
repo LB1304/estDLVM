@@ -16,7 +16,7 @@ est_SB(data, k, tol_lk = 1e-8, tol_theta = 1e-8, maxit = 1e3, maxit_FP = 500, sv
   \item{maxit_FP}{Maximum number of iterations for the fixed point algorithms in the VE step}
   \item{sv}{Starting value for the VEM algorithms; default is \code{NULL}}
   \item{algorithm}{Version of the VEM algorithm employed: \code{"VEM"} for the standard VEM and \code{"EVEM"} for the evolutionary VEM algorithms}
-  \item{evolutionaryOptions}{A list containing the options for the evolutionary VEM algorithm: number of parents (\code{n_parents}), and number of children (\code{n_children}), probability of mutation (\code{prob_mut}), and number of steps for the EM algorihm during the evolution (\code{R})}
+  \item{evolutionaryOptions}{A list containing the options for the evolutionary EM algorithm (see the \emph{Details} section)}
 }
 \details{
 The list \code{evolutionaryOptions} contains the evolutionary constants used to optimally set the EVEM algorithm:
