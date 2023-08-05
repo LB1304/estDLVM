@@ -18,6 +18,7 @@ est_LC(data, k, tol_lk = 1e-8, tol_theta = 1e-8, maxit = 1e3, sv = NULL, algorit
   \item{algorithm}{Version of the EM algorithm employed: \code{"EM"} for the standard EM, \code{"TEM"} for the tempered EM, and \code{"EEM"} for the evolutionary EM algorithms}
   \item{temperingOptions}{A list containing the options for the tempered EM algorithm (see the \emph{Details} section)}
   \item{evolutionaryOptions}{A list containing the options for the evolutionary EM algorithm (see the \emph{Details} section)}
+}
 \details{
 The list \code{temperingOptions} contains the tempering constants used to optimally set the TEM algorithm: 
 \itemize{
