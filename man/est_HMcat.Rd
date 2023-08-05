@@ -21,6 +21,29 @@ est_HMcat(data, index, k, modBasic, tol_lk = 1e-8, tol_theta = 1e-8, maxit = 1e3
   \item{temperingOptions}{A list containing the options for the tempered EM algorithm: type of tempering profile, and values for the tempering constants}
   \item{evolutionaryOptions}{A list containing the options for the evolutionary EM algorithm: number of parents (\code{n_parents}), and number of children (\code{n_children}), probability of mutation (\code{prob_mut}), and number of steps for the EM algorihm during the evolution (\code{R})}
 }
+\details{
+The list \code{temperingOptions} contains the tempering constants used to optimally set the TEM algorithm: 
+\itemize{
+  \item \code{profile} defines the type of tempering profile. Three versions are implemented:
+  \itemize{
+    \item a monotonically decreasing profile (\code{profile = 1}):
+    \deqn{\tau_h = \tau_0 \cdot \alpha^{h-1};}
+    \item a monotonically decreasing exponential profile (\code{profile = 2}):
+    \deqn{\tau_h = 1 + e^{\beta - h/\alpha};}
+    \item a non-monotonic profile with oscillations of gradually smaller amplitude (\code{profile = 3}):
+    \deqn{\tau_h = \text{tanh}\left(\frac{h}{2\rho}\right) + \left(\tau_0 - \beta \cdot \frac{2\sqrt{2}}{3\pi}\right) \cdot \alpha^{h/\rho} + \beta \cdot \text{sinc}\left(\frac{3\pi}{4} + \frac{h}{\rho}\right);}
+  }
+  \item \code{alpha}, \code{beta}, \code{rho}, and \code{T0} define the tempering constants \eqn{\alpha}, \eqn{\beta}, \eqn{\rho}, \eqn{\tau_0}, respectively.
+}
+
+The list \code{evolutionaryOptions} contains the evolutionary constants used to optimally set the EEM algorithm:
+\itemize{
+  \item \code{n_parents} number of parents;
+  \item \code{n_children} number of offspring;
+  \item \code{prob_mut} probability to perform mutation;
+  \item \code{R} number of cycles of the standard EM algorithm in each update step.
+}
+}
 \value{
   \item{LogLik}{Maximum log-likelihood function at convergence of the EM algorithm}
   \item{LogLik_vec}{Log-likelihood trace at every step of the EM algorithm}
