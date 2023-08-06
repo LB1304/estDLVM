@@ -56,6 +56,6 @@ est_HMcont <- function (data, index, k, modBasic, tol_lk = 1e-8, tol_theta = 1e-
   }
   
   out$call <- match.call()
-  class(out) <- "HMcont"
+  class(out) <- c(class(out), "HMcont")
   return(out)
 }
