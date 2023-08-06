@@ -1,14 +1,3 @@
-Get_opt <- function(x, alg) {
-  opt <- as.character(x$call[which(names(x$call) == alg)])
-  opt <- gsub("(?<=\\()[^()]*(?=\\))(*SKIP)(*F)|.", "", opt, perl=T)
-  opt <- strsplit(opt, ", ")[[1]]
-  opt <- strsplit(opt, " = ")
-  opt <- matrix(unlist(opt), ncol = length(opt))
-  opt_df <- data.frame(t(opt[2, ]))
-  colnames(opt_df) <- opt[1, ]
-  return(opt)
-}
-
 summary.LC <- function(x, ...) {
   cat("\nLatent class model for categorical data\n")
   
