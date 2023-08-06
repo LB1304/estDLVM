@@ -2,3 +2,15 @@ useDynLib(estDLVM, .registration=TRUE)
 importFrom(Rcpp, evalCpp)
 importFrom(RcppParallel, RcppParallelLibs)
 exportPattern("^[[:alpha:]]+")
+
+
+# S3methods
+S3method("print", "LC")
+S3method("print", "HMcat")
+S3method("print", "HMcont")
+S3method("print", "SB")
+
+S3method("summary", "LC")
+S3method("summary", "HMcat")
+S3method("summary", "HMcont")
+S3method("summary", "SB")
