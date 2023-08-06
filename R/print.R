@@ -9,6 +9,7 @@ Get_opt <- function(x, alg) {
   return(opt)
 }
 
+#'@export
 print.LC <- function(x, ...) {
   cat("\nLatent class model for categorical data\n")
   
@@ -33,7 +34,7 @@ print.LC <- function(x, ...) {
   print(data.frame(LogLik = x$LogLik, AIC = x$aic, BIC = x$bic, N_par = x$N_par, k = x$k, modBasic = x$modBasic, row.names = " "))
 }
 
-
+#'@export
 print.HMcat <- function(x, ...) {
   cat("\nHidden Markov model for categorical data\n")
   
@@ -58,7 +59,7 @@ print.HMcat <- function(x, ...) {
   print(data.frame(LogLik = x$LogLik, AIC = x$aic, BIC = x$bic, N_par = x$N_par, k = x$k, modBasic = x$modBasic, row.names = " "))
 }
 
-
+#'@export
 print.HMcont <- function(x, ...) {
   cat("\nHidden Markov model for continuous data\n")
   
@@ -83,7 +84,7 @@ print.HMcont <- function(x, ...) {
   print(data.frame(LogLik = x$LogLik, AIC = x$aic, BIC = x$bic, N_par = x$N_par, k = x$k, row.names = " "))
 }
 
-
+#'@export
 print.SB <- function(x, ...) {
   cat("\nStochastic block for network data\n")
   
