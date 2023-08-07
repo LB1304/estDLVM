@@ -7,6 +7,12 @@
 
 \details{
 The main functions of the package are listed hereafter:
+\itemize{
+  \item \code{\link{est_LC}}
+  \item \code{\link{est_HMcat}}
+  \item \code{\link{est_HMcont}}
+  \item \code{\link{est_SB}}
+}
 \packageIndices{estDLVM}
 }
 
@@ -30,4 +36,3 @@ Brusa, L., Bartolucci, F., Pennoni, F. (2022). Tempered expectation-maximization
 Daudin, J.-J., Picard, F., and Robin, S. (2008). A mixture model for random graphs. \emph{Stat. Comput.}, \bold{18}, 173--183.
 }
 
-\seealso{\code{\link{est_LC}}, \code{\link{est_HMcat}}, \code{\link{est_HMcont}}, \code{\link{est_SB}}}
