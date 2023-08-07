@@ -8,12 +8,11 @@
 \details{
 The main functions of the package are listed hereafter:
 \itemize{
-  \item \code{\link{est_LC}}
-  \item \code{\link{est_HMcat}}
-  \item \code{\link{est_HMcont}}
-  \item \code{\link{est_SB}}
+  \item \code{\link{est_LC}}: performs maximum likelihood estimation of the parameters of the latent class model for categorical data using EM, TEM, or EEM algorithms.
+  \item \code{\link{est_HMcat}}: performs maximum likelihood estimation of the parameters of the latent class model for categorical longitudinal data using EM, TEM, or EEM algorithms. 
+  \item \code{\link{est_HMcont}}: performs maximum likelihood estimation of the parameters of the latent class model for continuous longitudinal data using EM, TEM, or EEM algorithms. 
+  \item \code{\link{est_SB}}: performs approximate maximum likelihood estimation of the parameters of the latent class model for network data using VEM or EVEM algorithms. 
 }
-\packageIndices{estDLVM}
 }
 
 \author{
