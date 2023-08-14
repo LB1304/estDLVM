@@ -153,18 +153,19 @@ Rcpp::List HMcont_k1 (arma::cube S, int modBasic) {
   double aic = -2 * LogLik + N_par * 2;
   double bic = -2 * LogLik + N_par * log(n);
   
-  return Rcpp::List::create(Rcpp::Named("LogLik") = LogLik,
-                            Rcpp::Named("it") = 1,
-                            Rcpp::Named("piv") = piv,
-                            Rcpp::Named("Pi") = Pi,
-                            Rcpp::Named("Mu") = Mu,
-                            Rcpp::Named("Si") = Si,
-                            Rcpp::Named("k") = 1,
-                            Rcpp::Named("N_par") = N_par,
-                            Rcpp::Named("modBasic") = modBasic,
-                            Rcpp::Named("V") = V,
-                            Rcpp::Named("aic") = aic,
-                            Rcpp::Named("bic") = bic);
+  Rcpp::List out = Rcpp::List::create(Rcpp::Named("LogLik") = LogLik,
+                                      Rcpp::Named("it") = 1,
+                                      Rcpp::Named("piv") = piv,
+                                      Rcpp::Named("Pi") = Pi,
+                                      Rcpp::Named("Mu") = Mu,
+                                      Rcpp::Named("Si") = Si,
+                                      Rcpp::Named("k") = 1,
+                                      Rcpp::Named("N_par") = N_par,
+                                      Rcpp::Named("modBasic") = modBasic,
+                                      Rcpp::Named("V") = V,
+                                      Rcpp::Named("aic") = aic,
+                                      Rcpp::Named("bic") = bic);
+  out.attr("class") = "HMcont";
 }
 
 
