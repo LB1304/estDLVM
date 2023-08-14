@@ -97,16 +97,19 @@ Rcpp::List LC_k1 (arma::mat S, arma::colvec yv) {
   double aic = -2 * LogLik + 2 * N_par;
   double bic = -2 * LogLik + N_par * log(n);
   
-  return Rcpp::List::create(Rcpp::Named("LogLik") = LogLik, 
-                            Rcpp::Named("LogLik_vec") = LogLik, 
-                            Rcpp::Named("it") = 1, 
-                            Rcpp::Named("piv") = piv, 
-                            Rcpp::Named("Phi") = Phi, 
-                            Rcpp::Named("k") = 1, 
-                            Rcpp::Named("N_par") = N_par, 
-                            Rcpp::Named("V") = yv,
-                            Rcpp::Named("aic") = aic, 
-                            Rcpp::Named("bic") = bic);
+  Rcpp::List out = Rcpp::List::create(Rcpp::Named("LogLik") = LogLik, 
+                                      Rcpp::Named("LogLik_vec") = LogLik, 
+                                      Rcpp::Named("it") = 1, 
+                                      Rcpp::Named("piv") = piv, 
+                                      Rcpp::Named("Phi") = Phi, 
+                                      Rcpp::Named("k") = 1, 
+                                      Rcpp::Named("N_par") = N_par, 
+                                      Rcpp::Named("V") = yv,
+                                      Rcpp::Named("aic") = aic, 
+                                      Rcpp::Named("bic") = bic);
+  out.attr("class") = "LC";
+  
+  return out;
 }
 
 
