@@ -1,17 +1,20 @@
 summary.LC <- function(x, ...) {
-  cat("\nLatent class model for categorical data\n")
-  
-  c <- dim(x$Phi)[1]; r <- dim(x$Phi)[2]; k <- dim(x$Phi)[3]
-  x$piv <- matrix(x$piv, ncol = 1)
-  dimnames(x$piv) <- list("Latent Class" = 1:k, "")
-  dimnames(x$Phi) <- list("Category" = 0:(c-1), "Item" = 1:r, "Latent Class" = 1:k)
-  cat("\nWeights:\n")
-  print(round(x$piv, 4))
-  cat("\nConditional response probabilities:\n")
-  print(round(x$Phi, 4))
-  
-  cat("\nConvergence info:\n")
-  print(data.frame(LogLik = x$LogLik, AIC = x$aic, BIC = x$bic, N_par = x$N_par, k = x$k, row.names = " "))
+    cat("\nLatent class model for categorical data\n")
+    
+    c <- dim(x$Phi)[1]; r <- dim(x$Phi)[2]; k <- x$k
+    x$piv <- matrix(x$piv, ncol = 1)
+    dimnames(x$piv) <- list("Latent Class" = 1:k, "")
+    if (k == 1) {
+        x$Phi <- array(x$Phi, c(c, r, 1))
+    }
+    dimnames(x$Phi) <- list("Category" = 0:(c-1), "Item" = 1:r, "Latent Class" = 1:k)
+    cat("\nWeights:\n")
+    print(round(x$piv, 4))
+    cat("\nConditional response probabilities:\n")
+    print(round(x$Phi, 4))
+    
+    cat("\nConvergence info:\n")
+    print(data.frame(LogLik = x$LogLik, AIC = x$aic, BIC = x$bic, N_par = x$N_par, k = x$k, row.names = " "))
 }
 
 summary.HMcat <- function(x, ...) {
