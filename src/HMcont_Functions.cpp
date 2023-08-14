@@ -166,6 +166,8 @@ Rcpp::List HMcont_k1 (arma::cube S, int modBasic) {
                                       Rcpp::Named("aic") = aic,
                                       Rcpp::Named("bic") = bic);
   out.attr("class") = "HMcont";
+
+  return out;
 }
 
 
