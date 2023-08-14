@@ -74,16 +74,19 @@ Rcpp::List SB_k1 (arma::mat Y) {
   double J = n_edges * log_B1 + (bin_coeff(n+2-1, 2) - n_edges) * log_B2;
   double ICL = LogLik - 0.5 * log(bin_coeff(n, 2));
   
-  return Rcpp::List::create(Rcpp::Named("LogLik") = LogLik,
-                            Rcpp::Named("J") = J,
-                            Rcpp::Named("J_vec") = J,
-                            Rcpp::Named("it") = 1,
-                            Rcpp::Named("piv") = piv,
-                            Rcpp::Named("B") = B,
-                            Rcpp::Named("k") = 1,
-                            Rcpp::Named("N_par") = 1,
-                            Rcpp::Named("V") = V,
-                            Rcpp::Named("icl") = ICL);
+  Rcpp::List out = Rcpp::List::create(Rcpp::Named("LogLik") = LogLik,
+                                      Rcpp::Named("J") = J,
+                                      Rcpp::Named("J_vec") = J,
+                                      Rcpp::Named("it") = 1,
+                                      Rcpp::Named("piv") = piv,
+                                      Rcpp::Named("B") = B,
+                                      Rcpp::Named("k") = 1,
+                                      Rcpp::Named("N_par") = 1,
+                                      Rcpp::Named("V") = V,
+                                      Rcpp::Named("icl") = ICL);
+  out.attr("class") = "SB";
+  
+  return out;
 }
 
 
