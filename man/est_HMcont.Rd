@@ -22,7 +22,7 @@ est_HMcont(data, index, k, modBasic, tol_lk = 1e-8, tol_theta = 1e-8, maxit = 1e
   \item{evolutionaryOptions}{A list containing the options for the evolutionary EM algorithm (see the \emph{Details} section)}
 }
 \details{
-The list \code{temperingOptions} contains the tempering constants used to optimally set the TEM algorithm: 
+The list \code{temperingOptions} contains the tempering constants used to set the TEM algorithm optimally: 
 \itemize{
   \item \code{profile} defines the type of tempering profile. Three versions are implemented:
   \itemize{
@@ -36,7 +36,7 @@ The list \code{temperingOptions} contains the tempering constants used to optima
   \item \code{alpha}, \code{beta}, \code{rho}, and \code{T0} define the tempering constants \eqn{\alpha}, \eqn{\beta}, \eqn{\rho}, \eqn{\tau_0}, respectively.
 }
 
-The list \code{evolutionaryOptions} contains the evolutionary constants used to optimally set the EEM algorithm:
+The list \code{evolutionaryOptions} contains the evolutionary constants used to set the EEM algorithm optimally:
 \itemize{
   \item \code{n_parents} number of parents;
   \item \code{n_children} number of offspring;
@@ -66,7 +66,7 @@ The list \code{evolutionaryOptions} contains the evolutionary constants used to 
 \examples{
 require(estDLVM)
 
-## Generate sample from the HMcont model
+## Generate samples from the HMcont model
 n <- 500
 piv <- runif(3); piv <- piv/sum(piv)
 Pi <- array(c(0.80, 0.10, 0.05, 0.15, 0.80, 0.15, 0.05, 0.10, 0.80), dim = c(3, 3, 5))
