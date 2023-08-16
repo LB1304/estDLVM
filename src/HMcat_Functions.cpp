@@ -798,7 +798,7 @@ Rcpp::List HMcat_EEM(arma::cube S, arma::colvec yv, int k, double tol_lk, double
   int r = S.n_slices;
 
   // 1. Initial values
-  Rcpp::List PV1 = HMcat_Initialization_step(S = S, yv = yv, ns = ns, r = r, TT = TT, k = k, n_parents = n_parents);
+  Rcpp::List PV1 = HMcat_Initialization_step(S, yv, ns, r, TT, k, n_parents);
   Rcpp::List PV2(n_parents), PV3(n_children), PV4(n_children), PV5(n_parents), PV6(n_parents);
   arma::rowvec fit2(n_parents), fit4(n_children), fit5(n_parents);
   double fit_old;
