@@ -19,7 +19,7 @@ est_SB(data, k, tol_lk = 1e-8, tol_theta = 1e-8, maxit = 1e3, maxit_FP = 500, sv
   \item{evolutionaryOptions}{A list containing the options for the evolutionary EM algorithm (see the \emph{Details} section)}
 }
 \details{
-The list \code{evolutionaryOptions} contains the evolutionary constants used to optimally set the EVEM algorithm:
+The list \code{evolutionaryOptions} contains the evolutionary constants used to set the EVEM algorithm optimally:
 \itemize{
   \item \code{n_parents} number of parents;
   \item \code{n_children} number of offspring;
@@ -46,7 +46,7 @@ The list \code{evolutionaryOptions} contains the evolutionary constants used to 
 \examples{
 require(estDLVM)
 
-## Generate sample from the SB model
+## Generate samples from the SB model
 n <- 500
 piv <- runif(3); piv <- piv/sum(piv)
 B <- matrix(0.3, ncol = 3, nrow = 3); diag(B) <- 0.7
