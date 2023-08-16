@@ -620,7 +620,7 @@ Rcpp::List LC_EEM (arma::mat S, arma::colvec yv, int k, double tol_lk, double to
   int C = S.max() + 1;
   
   // 1. Initial values
-  Rcpp::List PV1 = LC_Initialization_step(S = S, yv = yv, ns = ns, r = r, C = C, k = k, n_parents = n_parents);
+  Rcpp::List PV1 = LC_Initialization_step(S, yv, ns, r, C, k, n_parents);
   Rcpp::List PV2(n_parents), PV3(n_children), PV4(n_children), PV5(n_parents), PV6(n_parents);
   arma::rowvec fit2(n_parents), fit4(n_children), fit5(n_parents);
   double fit_old;
