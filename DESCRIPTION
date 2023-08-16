@@ -7,7 +7,9 @@ Authors@R: c(
   person("Luca", "Brusa", email = "luca.brusa@unimib.it", role = c("cre", "aut")),
   person("Fulvia", "Pennoni"),
   person("Francesco", "Bartolucci"))
-Description: The estDLVM package provides efficient functions for performing maximum likelihood and approximate maximum likelihood estimation in the context of discrete latent variable models. The package is implemented in C++ to ensure superior efficiency in computations. For the latent class and the hidden Markov models, the package offers three versions of the expectation-maximization algorithm: standard (EM), tempered (TEM), and evolutionary (EEM). The standard EM implementation relies on the MultiLIRT package for the latent class models, and on the LMest package for the hidden Markov models. For the stochastic block model, the package offers two versions of the variational expectation-maximization algorithm: standard (VEM) and evolutionary (EVEM). 
+Description: The estDLVM package provides functions for performing maximum likelihood and approximate maximum likelihood estimation of some discrete latent variable models through three different Expectation-Maximization algorithms. The package is implemented in C++ to provide efficient computations. 
+  For the latent class and the hidden Markov models, the package offers three versions of the expectation-maximization algorithm: standard (EM), tempered (TEM), and evolutionary (EEM). The standard EM implementation relies on the MultiLCIRT package (Bartolucci et al., 2014) for the latent class models and the LMest package (Bartolucci et al., 2017)  for the hidden Markov models, to which we refer for further details. 
+  The package also offers two versions of the variational expectation-maximization algorithm for estimating the stochastic block model: standard (VEM) and evolutionary (EVEM).
 License: GPL-3
 Imports: 
   Rcpp (>= 1.0.8),
