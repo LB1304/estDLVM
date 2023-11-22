@@ -8,8 +8,7 @@ To install the `estDLVM` package directly from GitHub:
 ```r
 # install.packages("devtools")
 require(devtools)
-devtools::install_github("LB1304/estDLVM", ref = "main", 
-                         auth_token = "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")
+devtools::install_github("LB1304/estDLVM")
 ```
 
 To download the .tar.gz file (for manual installation) use [this link](https://github.com/LB1304/estDLVM/archive/main.tar.gz).
