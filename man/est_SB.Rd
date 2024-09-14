@@ -33,7 +33,7 @@ The list \code{evolutionaryOptions} contains the evolutionary constants used to 
   \item{J_vec}{ELBO trace at every step of the VEM algorithm}
   \item{it}{Number of iterations of the EM algorithm}
   \item{piv}{Estimate of the weight vector (k)}
-  \item{B}{Estimate of the conditional response probabilities (k x k)}
+  \item{B}{Estimate of the connection probabilities (k x k)}
   \item{k}{Number of latent blocks}
   \item{N_par}{Number of free parameters}
   \item{V}{Matrix of the posterior probabilities for each unit and latent block (n x k)}
